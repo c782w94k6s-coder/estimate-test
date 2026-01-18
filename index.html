@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>健診＋予防薬 見積もり</title>
+<style>
+body {
+  font-family: system-ui;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+select, input, button {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+}
+.result {
+  background: #f3f3f3;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+</style>
+</head>
+<body>
+
+<h2>健診＋予防薬 見積もり</h2>
+
+<label>動物</label>
+<select id="animal">
+  <option value="">選択</option>
+  <option value="dog">犬</option>
+  <option value="cat">猫</option>
+</select>
+
+<label>体重（kg）</label>
+<input type="number" id="weight" step="0.1">
+
+<label>健診コース</label>
+<select id="checkup">
+  <option value="light">ライト</option>
+  <option value="standard">スタンダード</option>
+  <option value="premium">プレミアム</option>
+</select>
+
+<label>予防薬①</label>
+<select id="med1"></select>
+
+<label>予防薬②（任意）</label>
+<select id="med2">
+  <option value="">なし</option>
+</select>
+
+<label>投与月数</label>
+<select id="months">
+  <option value="8">8ヶ月</option>
+  <option value="12">12ヶ月</option>
+</select>
+
+<button onclick="calc()">見積もり計算</button>
+
+<div class="result" id="result"></div>
+
+<script>
+const priceTable = {
+  dog: {
+    "クレデリオプラス": [{max:45, price:4000}],
+    "ネクスガードスペクトラ": [{max:60, price:4700}],
+    "イベルメック": [{max:45.3, price:2200}],
+    "ネクスガード": [{max:55, price:2300}],
+    "エフィプロデュオ": [{max:40, price:1900}],
+    "レボリューション": [{max:40, price:2800}]
+  },
+  cat: {
+    "レボリューションプラス": [{max:10, price:1900}],
+    "ブロードライン": [{max:7.5, price:2100}],
+    "レボリューション": [{max:10, price:1900}]
+  }
+};
+
+const checkupFee = {
+  light: 15000,
+  standard: 20000,
+  premium: 35000
+};
+
+const animal = document.getElementById("animal");
+const med1 = document.getElementById("med1");
+const med2 = document.getElementById("med2");
+
+animal.addEventListener("change", () => {
+  med1.innerHTML = "";
+  med2.innerHTML = "<option value=''>なし</option>";
+  Object.keys(priceTable[animal.value]).forEach(m => {
+    med1.innerHTML += `<option value="${m}">${m}</option>`;
+    med2.innerHTML += `<option value="${m}">${m}</option>`;
+  });
+});
+
+function getPrice(name, weight) {
+  return priceTable[animal.value][name].find(p => weight <= p.max).price;
+}
+
+function calc() {
+  const w = Number(weight.value);
+  const m = Number(months.value);
+  const cFee = checkupFee[checkup.value];
+
+  let meds = [med1.value];
+  if (med2.value) meds.push(med2.value);
+
+  let totalMed = 0;
+  let prices = [];
+
+  meds.forEach(med => {
+    const p = getPrice(med, w);
+    prices.push(p);
+    totalMed += p * m;
+  });
+
+  let discountCount = 0;
+  if (animal.value === "dog") {
+    if (m === 12 && meds.length === 2) discountCount = 2;
+    else if (m >= 8 && meds.length === 2) discountCount = 1;
+  } else {
+    discountCount = m === 12 ? 2 : 1;
+  }
+
+  const discount = Math.max(...prices) * discountCount;
+  const total = cFee + totalMed - discount;
+
+  result.innerHTML = `
+    <p>健診料金：¥${cFee.toLocaleString()}</p>
+    <p>予防薬合計：¥${totalMed.toLocaleString()}</p>
+    <p>割引：${discountCount}個分</p>
+    <hr>
+    <strong>合計：¥${total.toLocaleString()}</strong>
+  `;
+}
+</script>
+
+</body>
+</html>
