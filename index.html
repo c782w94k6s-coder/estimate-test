@@ -201,15 +201,15 @@ function calc(){
       const med = comboMed();
       const p = getPrice(prices[med], w);
       const d = planData.combo[plan.value];
-      const drugSubtotal = p * d.months;
-const discount = p * d.discount;
+      drugSubtotal = p * d.months;
+discount = p * d.discount;
 total = drugSubtotal - discount;
     } else {
       const f = getPrice(prices[fleaMed()], w);
       const fi = getPrice(prices.iver, w);
       const d = planData.separate[plan.value];
-      const drugSubtotal = f * d.f + fi * d.fi;
-const discount = (f + fi) * d.discount;
+      drugSubtotal = f * d.f + fi * d.fi;
+discount = (f + fi) * d.discount;
 total = drugSubtotal - discount;
     }
   }
@@ -217,8 +217,8 @@ total = drugSubtotal - discount;
   if(animal.value === "cat"){
     const p = getPrice(prices.cat, w);
     const d = planData.cat[plan.value];
-    const drugSubtotal = p * d.months;
-const discount = p * d.discount;
+    drugSubtotal = p * d.months;
+discount = p * d.discount;
 total = drugSubtotal - discount;
   }
 
