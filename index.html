@@ -56,8 +56,8 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
 <div id="combo-area" class="box hidden">
   <label>総合予防薬</label>
   <select id="combo-med">
-    <option value="cred">クレデリオプラス（食べるタイプ）</option>
-    <option value="nexsp">ネクスガードスペクトラ（食べるタイプ）</option>
+    <option value="cred">クレデリオプラス（タブレットタイプ）</option>
+    <option value="nexsp">ネクスガードスペクトラ（キューブタイプ）</option>
   </select>
 </div>
 
@@ -118,10 +118,20 @@ function checkup(course,w){
 }
 
 // ===== プラン =====
-const plans={
- combo:{A:{m:8,d:1},C:{m:12,d:2}},
- separate:{A:{f:8,fi:8,d:1},B:{f:12,fi:8,d:1},C:{f:12,fi:12,d:2}},
- cat:{A:{m:8,d:1},B:{m:12,d:2}}
+const plans = {
+  combo: {
+    A: { label: "A：8ヶ月", m: 8, d: 1 },
+    C: { label: "C：12ヶ月", m: 12, d: 2 }
+  },
+  separate: {
+    A: { label: "A：ノミダニ8ヶ月／フィラリア8ヶ月", f: 8, fi: 8, d: 1 },
+    B: { label: "B：ノミダニ12ヶ月／フィラリア8ヶ月", f: 12, fi: 8, d: 1 },
+    C: { label: "C：ノミダニ12ヶ月／フィラリア12ヶ月", f: 12, fi: 12, d: 2 }
+  },
+  cat: {
+    A: { label: "A：8ヶ月", m: 8, d: 1 },
+    B: { label: "B：12ヶ月", m: 12, d: 2 }
+  }
 };
 
 function getPrice(list,w){
@@ -144,23 +154,25 @@ function updateUI(){
  if(animal.value==="dog"){
   document.getElementById("dog-type-area").classList.remove("hidden");
   const type=document.querySelector("input[name='dogtype']:checked").value;
-  if(type==="combo"){
-   document.getElementById("combo-area").classList.remove("hidden");
-   addPlans(["A","C"]);
-  }else{
-   document.getElementById("separate-area").classList.remove("hidden");
-   addPlans(["A","B","C"]);
-  }
- }
- if(animal.value==="cat"){ addPlans(["A","B"]); }
+  if(type === "combo"){
+  document.getElementById("combo-area").classList.remove("hidden");
+  addPlans(["A","C"], plans.combo);
+} else {
+  document.getElementById("separate-area").classList.remove("hidden");
+  addPlans(["A","B","C"], plans.separate);
 }
 
-function addPlans(arr){
- arr.forEach(p=>{
-  const o=document.createElement("option");
-  o.value=p; o.textContent=p;
-  planSel.appendChild(o);
- });
+if(animal.value === "cat"){
+  addPlans(["A","B"], plans.cat);
+}
+
+function addPlans(keys, planSet){
+  keys.forEach(k=>{
+    const o = document.createElement("option");
+    o.value = k;
+    o.textContent = planSet[k].label; // ← 表示はここ
+    planSel.appendChild(o);
+  });
 }
 
 // ===== 計算 =====
