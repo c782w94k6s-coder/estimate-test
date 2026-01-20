@@ -222,11 +222,15 @@ const discount = p * d.discount;
 total = drugSubtotal - discount;
   }
 
-  const grandTotal = total + course;
-result.textContent =
-  "健診＋予防薬 合計（税抜）： " +
+  const grandTotal = courseFee + total;
+
+result.innerHTML =
+  "健診料金： " + courseFee.toLocaleString() + " 円<br>" +
+  "予防薬合計： " + drugSubtotal.toLocaleString() + " 円<br>" +
+  "まとめ買い割引： ▲" + discount.toLocaleString() + " 円<br><br>" +
+  "<strong>健診＋予防薬 合計（税抜）： " +
   grandTotal.toLocaleString() +
-  " 円";
+  " 円</strong>";
 }
 
 function comboMed(){ return document.getElementById("combo-med").value; }
