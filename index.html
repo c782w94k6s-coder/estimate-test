@@ -91,30 +91,30 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
 <script>
 // ===== 単価 =====
 const prices={
-cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500],[45,4000]],
-nexsp:[[3.6,3000],[7.5,3400],[15,3800],[30,4400],[60,4700]],
-effipro:[[10,1400],[20,1700],[40,1900]],
-nex:[[4.5,1600],[11,1800],[27,2000],[55,2300]],
-iver:[[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
-cat:[[2.5,1700],[5,1800],[10,1900]]
+  cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500],[45,4000]],
+  nexsp:[[3.6,3000],[7.5,3400],[15,3800],[30,4400],[60,4700]],
+  effipro:[[10,1400],[20,1700],[40,1900]],
+  nex:[[4.5,1600],[11,1800],[27,2000],[55,2300]],
+  iver:[[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
+  cat:[[2.5,1700],[5,1800],[10,1900]]
 };
 
 // ===== 健診料金 =====
 function checkup(course,w){
- if(course==="light") return 7700;
- if(course==="standard"){
-  if(w<=10) return 18700;
-  if(w<=20) return 20900;
-  if(w<=40) return 23100;
-  return 25300;
- }
- if(course==="premium"){
-  if(w<=10) return 36300;
-  if(w<=20) return 38500;
-  if(w<=40) return 44000;
-  return 49500;
- }
- return 0;
+  if(course==="light") return 7700;
+  if(course==="standard"){
+    if(w<=10) return 18700;
+    if(w<=20) return 20900;
+    if(w<=40) return 23100;
+    return 25300;
+  }
+  if(course==="premium"){
+    if(w<=10) return 36300;
+    if(w<=20) return 38500;
+    if(w<=40) return 44000;
+    return 49500;
+  }
+  return 0;
 }
 
 // ===== プラン =====
@@ -135,72 +135,80 @@ const plans = {
 };
 
 function getPrice(list,w){
- for(const i of list){ if(w<=i[0]) return i[1]; }
- return 0;
+  for(const i of list){
+    if(w<=i[0]) return i[1];
+  }
+  return 0;
 }
 
 // ===== UI制御 =====
 const animal=document.getElementById("animal");
 const planSel=document.getElementById("plan");
 animal.onchange=updateUI;
-document.querySelectorAll("input[name='dogtype']").forEach(r=>r.onchange=updateUI);
+document.querySelectorAll("input[name='dogtype']")
+  .forEach(r=>r.onchange=updateUI);
 
 function updateUI(){
- planSel.innerHTML="";
- document.getElementById("dog-type-area").classList.add("hidden");
- document.getElementById("combo-area").classList.add("hidden");
- document.getElementById("separate-area").classList.add("hidden");
+  planSel.innerHTML="";
+  document.getElementById("dog-type-area").classList.add("hidden");
+  document.getElementById("combo-area").classList.add("hidden");
+  document.getElementById("separate-area").classList.add("hidden");
 
- if(animal.value==="dog"){
-  document.getElementById("dog-type-area").classList.remove("hidden");
-  const type=document.querySelector("input[name='dogtype']:checked").value;
-  if(type === "combo"){
-  document.getElementById("combo-area").classList.remove("hidden");
-  addPlans(["A","C"], plans.combo);
-} else {
-  document.getElementById("separate-area").classList.remove("hidden");
-  addPlans(["A","B","C"], plans.separate);
+  if(animal.value==="dog"){
+    document.getElementById("dog-type-area").classList.remove("hidden");
+    const type=document.querySelector("input[name='dogtype']:checked").value;
+
+    if(type==="combo"){
+      document.getElementById("combo-area").classList.remove("hidden");
+      addPlans(["A","C"], plans.combo);
+    }else{
+      document.getElementById("separate-area").classList.remove("hidden");
+      addPlans(["A","B","C"], plans.separate);
+    }
+  }
+
+  if(animal.value==="cat"){
+    addPlans(["A","B"], plans.cat);
+  }
 }
 
-if(animal.value === "cat"){
-  addPlans(["A","B"], plans.cat);
-}
-
+// ===== 予防期間表示 =====
 function addPlans(keys, planSet){
   keys.forEach(k=>{
-    const o = document.createElement("option");
-    o.value = k;
-    o.textContent = planSet[k].label; // ← 表示はここ
+    const o=document.createElement("option");
+    o.value=k;
+    o.textContent=planSet[k].label;
     planSel.appendChild(o);
   });
 }
 
 // ===== 計算 =====
 function calc(){
- const w=Number(weight.value);
- let total=checkup(course.value,w);
+  const w=Number(weight.value);
+  let total=checkup(course.value,w);
 
- if(animal.value==="dog"){
-  const type=document.querySelector("input[name='dogtype']:checked").value;
-  if(type==="combo"){
-   const p=getPrice(prices[document.getElementById("combo-med").value],w);
-   const d=plans.combo[planSel.value];
-   total+=p*d.m-p*d.d;
-  }else{
-   const f=getPrice(prices[document.getElementById("flea-med").value],w);
-   const fi=getPrice(prices.iver,w);
-   const d=plans.separate[planSel.value];
-   total+=f*d.f+fi*d.fi-(f+fi)*d.d;
+  if(animal.value==="dog"){
+    const type=document.querySelector("input[name='dogtype']:checked").value;
+    if(type==="combo"){
+      const p=getPrice(prices[document.getElementById("combo-med").value],w);
+      const d=plans.combo[planSel.value];
+      total+=p*d.m-p*d.d;
+    }else{
+      const f=getPrice(prices[document.getElementById("flea-med").value],w);
+      const fi=getPrice(prices.iver,w);
+      const d=plans.separate[planSel.value];
+      total+=f*d.f+fi*d.fi-(f+fi)*d.d;
+    }
   }
- }
- if(animal.value==="cat"){
-  const p=getPrice(prices.cat,w);
-  const d=plans.cat[planSel.value];
-  total+=p*d.m-p*d.d;
- }
 
- document.getElementById("result").textContent=
-  "健診＋予防薬 合計（税抜）： "+total.toLocaleString()+" 円";
+  if(animal.value==="cat"){
+    const p=getPrice(prices.cat,w);
+    const d=plans.cat[planSel.value];
+    total+=p*d.m-p*d.d;
+  }
+
+  document.getElementById("result").textContent =
+    "健診＋予防薬 合計（税抜）： " + total.toLocaleString() + " 円";
 }
 </script>
 </body>
