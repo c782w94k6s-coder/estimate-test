@@ -67,8 +67,8 @@ button {
 <div id="dog-type-area" class="hidden">
   <label>予防薬の種類</label>
   <select id="dog-type">
-    <option value="combo">ノミダニ＋フィラリア（総合予防薬）</option>
-    <option value="separate">ノミダニ予防薬＋フィラリア予防薬</option>
+    <option value="combo">ノミダニ＋フィラリア予防薬(1種類で予防)</option>
+    <option value="separate">ノミダニ予防薬＋フィラリア予防薬(2種類で予防)</option>
   </select>
   <div class="small">※迷った場合はスタッフにお声がけください</div>
 </div>
@@ -201,19 +201,25 @@ function calc(){
       const med = comboMed();
       const p = getPrice(prices[med], w);
       const d = planData.combo[plan.value];
-      total = p * d.months - p * d.discount;
+      const drugSubtotal = p * d.months;
+const discount = p * d.discount;
+total = drugSubtotal - discount;
     } else {
       const f = getPrice(prices[fleaMed()], w);
       const fi = getPrice(prices.iver, w);
       const d = planData.separate[plan.value];
-      total = f * d.f + fi * d.fi - (f + fi) * d.discount;
+      const drugSubtotal = f * d.f + fi * d.fi;
+const discount = (f + fi) * d.discount;
+total = drugSubtotal - discount;
     }
   }
 
   if(animal.value === "cat"){
     const p = getPrice(prices.cat, w);
     const d = planData.cat[plan.value];
-    total = p * d.months - p * d.discount;
+    const drugSubtotal = p * d.months;
+const discount = p * d.discount;
+total = drugSubtotal - discount;
   }
 
   const grandTotal = total + course;
