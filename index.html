@@ -4,44 +4,18 @@
 <meta charset="UTF-8">
 <title>健診・予防薬 見積もり</title>
 <style>
-body {
-  font-family: sans-serif;
-  max-width: 600px;
-  margin: 20px auto;
-}
-label {
-  display: block;
-  margin-top: 15px;
-  font-weight: bold;
-}
-select, input {
-  width: 100%;
-  padding: 6px;
-  margin-top: 5px;
-}
-.small {
-  font-size: 12px;
-  color: #555;
-}
-.hidden {
-  display: none;
-}
-button {
-  margin-top: 20px;
-  padding: 10px;
-  width: 100%;
-  font-size: 16px;
-}
-#result {
-  margin-top: 20px;
-  font-size: 18px;
-  font-weight: bold;
-}
+body{font-family:sans-serif;max-width:680px;margin:20px auto;}
+label{font-weight:bold;display:block;margin-top:16px;}
+select,input{width:100%;padding:6px;margin-top:6px;}
+.small{font-size:12px;color:#555;}
+.hidden{display:none;}
+.box{border:1px solid #ccc;padding:10px;margin-top:10px;}
+button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
+#result{margin-top:20px;font-size:18px;font-weight:bold;}
 </style>
 </head>
 
 <body>
-
 <h2>健診・予防薬 見積もり</h2>
 
 <label>動物</label>
@@ -64,17 +38,22 @@ button {
 </select>
 
 <!-- 犬：予防薬の種類 -->
-<div id="dog-type-area" class="hidden">
+<div id="dog-type-area" class="box hidden">
   <label>予防薬の種類</label>
-  <select id="dog-type">
-    <option value="combo">ノミダニ＋フィラリア（総合予防薬）</option>
-    <option value="separate">ノミダニ予防薬＋フィラリア予防薬</option>
-  </select>
+
+  <input type="radio" name="dogtype" value="combo" checked>
+  ノミダニ＋フィラリア【1種類で予防】
+  <div class="small">※1種類でまとめて予防します</div><br>
+
+  <input type="radio" name="dogtype" value="separate">
+  ノミダニ予防薬＋フィラリア予防薬【2種類で予防】
+  <div class="small">※それぞれ別のお薬を使用します</div>
+
   <div class="small">※迷った場合はスタッフにお声がけください</div>
 </div>
 
-<!-- 犬：総合予防薬 -->
-<div id="combo-area" class="hidden">
+<!-- 犬：総合 -->
+<div id="combo-area" class="box hidden">
   <label>総合予防薬</label>
   <select id="combo-med">
     <option value="cred">クレデリオプラス（食べるタイプ）</option>
@@ -83,25 +62,24 @@ button {
 </div>
 
 <!-- 犬：別々 -->
-<div id="separate-area" class="hidden">
+<div id="separate-area" class="box hidden">
   <label>ノミ・マダニ予防薬</label>
   <select id="flea-med">
     <option value="effipro">エフィプロデュオ（スポットタイプ）</option>
     <option value="nex">ネクスガード（食べるタイプ）</option>
   </select>
 
-  <label>フィラリア予防薬</label>
-  <select id="filaria-med">
-    <option value="iver">イベルメック（食べるタイプ）</option>
+  <label style="margin-top:10px;">フィラリア予防薬</label>
+  <select disabled>
+    <option>イベルメック（食べるタイプ）</option>
   </select>
 </div>
 
 <label>予防期間</label>
 <select id="plan"></select>
-<div class="small">※まとめて購入することで割引が適用されます</div>
+<div class="small">※まとめて購入で割引が適用されます</div>
 
 <button onclick="calc()">見積もり計算</button>
-
 <div id="result"></div>
 
 <p class="small" style="margin-top:20px;">
@@ -111,135 +89,107 @@ button {
 </p>
 
 <script>
-// 予防薬単価
-const prices = {
-  cred: [[2.8,2200],[5.5,2300],[11,2800],[22,3500],[45,4000]],
-  nexsp: [[3.6,3000],[7.5,3400],[15,3800],[30,4400],[60,4700]],
-  effipro: [[10,1400],[20,1700],[40,1900]],
-  nex: [[4.5,1600],[11,1800],[27,2000],[55,2300]],
-  iver: [[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
-  cat: [[2.5,1700],[5,1800],[10,1900]]
+// ===== 単価 =====
+const prices={
+cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500],[45,4000]],
+nexsp:[[3.6,3000],[7.5,3400],[15,3800],[30,4400],[60,4700]],
+effipro:[[10,1400],[20,1700],[40,1900]],
+nex:[[4.5,1600],[11,1800],[27,2000],[55,2300]],
+iver:[[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
+cat:[[2.5,1700],[5,1800],[10,1900]]
 };
 
-// 健診料金
-function checkupPrice(course, w){
-  if(course === "light") return 7700;
-
-  if(course === "standard"){
-    if(w <= 10) return 18700;
-    if(w <= 20) return 20900;
-    if(w <= 40) return 23100;
-    return 25300;
-  }
-
-  if(course === "premium"){
-    if(w <= 10) return 36300;
-    if(w <= 20) return 38500;
-    if(w <= 40) return 44000;
-    return 49500;
-  }
-  return 0;
+// ===== 健診料金 =====
+function checkup(course,w){
+ if(course==="light") return 7700;
+ if(course==="standard"){
+  if(w<=10) return 18700;
+  if(w<=20) return 20900;
+  if(w<=40) return 23100;
+  return 25300;
+ }
+ if(course==="premium"){
+  if(w<=10) return 36300;
+  if(w<=20) return 38500;
+  if(w<=40) return 44000;
+  return 49500;
+ }
+ return 0;
 }
 
-// プラン
-const planData = {
-  combo: {
-    A:{months:8, discount:1},
-    C:{months:12, discount:2}
-  },
-  separate: {
-    A:{f:8, fi:8, discount:1},
-    B:{f:12, fi:8, discount:1},
-    C:{f:12, fi:12, discount:2}
-  },
-  cat: {
-    A:{months:8, discount:1},
-    B:{months:12, discount:2}
-  }
+// ===== プラン =====
+const plans={
+ combo:{A:{m:8,d:1},C:{m:12,d:2}},
+ separate:{A:{f:8,fi:8,d:1},B:{f:12,fi:8,d:1},C:{f:12,fi:12,d:2}},
+ cat:{A:{m:8,d:1},B:{m:12,d:2}}
 };
 
-function getPrice(list, w){
-  for(let i of list){
-    if(w <= i[0]) return i[1];
-  }
-  return 0;
+function getPrice(list,w){
+ for(const i of list){ if(w<=i[0]) return i[1]; }
+ return 0;
 }
 
-const animal = document.getElementById("animal");
-const dogTypeArea = document.getElementById("dog-type-area");
-const comboArea = document.getElementById("combo-area");
-const separateArea = document.getElementById("separate-area");
-const plan = document.getElementById("plan");
-const dogType = document.getElementById("dog-type");
-
-animal.onchange = updateUI;
-dogType.onchange = updateUI;
+// ===== UI制御 =====
+const animal=document.getElementById("animal");
+const planSel=document.getElementById("plan");
+animal.onchange=updateUI;
+document.querySelectorAll("input[name='dogtype']").forEach(r=>r.onchange=updateUI);
 
 function updateUI(){
-  plan.innerHTML = "";
-  comboArea.classList.add("hidden");
-  separateArea.classList.add("hidden");
-  dogTypeArea.classList.add("hidden");
+ planSel.innerHTML="";
+ document.getElementById("dog-type-area").classList.add("hidden");
+ document.getElementById("combo-area").classList.add("hidden");
+ document.getElementById("separate-area").classList.add("hidden");
 
-  if(animal.value === "dog"){
-    dogTypeArea.classList.remove("hidden");
-    if(dogType.value === "combo"){
-      comboArea.classList.remove("hidden");
-      addPlans(planData.combo);
-    } else {
-      separateArea.classList.remove("hidden");
-      addPlans(planData.separate);
-    }
+ if(animal.value==="dog"){
+  document.getElementById("dog-type-area").classList.remove("hidden");
+  const type=document.querySelector("input[name='dogtype']:checked").value;
+  if(type==="combo"){
+   document.getElementById("combo-area").classList.remove("hidden");
+   addPlans(["A","C"]);
+  }else{
+   document.getElementById("separate-area").classList.remove("hidden");
+   addPlans(["A","B","C"]);
   }
-
-  if(animal.value === "cat"){
-    addPlans(planData.cat);
-  }
+ }
+ if(animal.value==="cat"){ addPlans(["A","B"]); }
 }
 
-function addPlans(obj){
-  for(let k in obj){
-    let o = document.createElement("option");
-    o.value = k;
-    o.textContent = k;
-    plan.appendChild(o);
-  }
+function addPlans(arr){
+ arr.forEach(p=>{
+  const o=document.createElement("option");
+  o.value=p; o.textContent=p;
+  planSel.appendChild(o);
+ });
 }
 
+// ===== 計算 =====
 function calc(){
-  const w = Number(weight.value);
-  let total = 0;
+ const w=Number(weight.value);
+ let total=checkup(course.value,w);
 
-  // 健診代
-  total += checkupPrice(course.value, w);
-
-  if(animal.value === "dog"){
-    if(dogType.value === "combo"){
-      const p = getPrice(prices[comboMed()], w);
-      const d = planData.combo[plan.value];
-      total += p * d.months - p * d.discount;
-    } else {
-      const f = getPrice(prices[fleaMed()], w);
-      const fi = getPrice(prices.iver, w);
-      const d = planData.separate[plan.value];
-      total += f * d.f + fi * d.fi - (f + fi) * d.discount;
-    }
+ if(animal.value==="dog"){
+  const type=document.querySelector("input[name='dogtype']:checked").value;
+  if(type==="combo"){
+   const p=getPrice(prices[document.getElementById("combo-med").value],w);
+   const d=plans.combo[planSel.value];
+   total+=p*d.m-p*d.d;
+  }else{
+   const f=getPrice(prices[document.getElementById("flea-med").value],w);
+   const fi=getPrice(prices.iver,w);
+   const d=plans.separate[planSel.value];
+   total+=f*d.f+fi*d.fi-(f+fi)*d.d;
   }
+ }
+ if(animal.value==="cat"){
+  const p=getPrice(prices.cat,w);
+  const d=plans.cat[planSel.value];
+  total+=p*d.m-p*d.d;
+ }
 
-  if(animal.value === "cat"){
-    const p = getPrice(prices.cat, w);
-    const d = planData.cat[plan.value];
-    total += p * d.months - p * d.discount;
-  }
-
-  result.textContent =
-    "健診＋予防薬 合計（税抜）： " +
-    total.toLocaleString() + " 円";
+ document.getElementById("result").textContent=
+  "健診＋予防薬 合計（税抜）： "+total.toLocaleString()+" 円";
 }
-
-function comboMed(){ return document.getElementById("combo-med").value; }
-function fleaMed(){ return document.getElementById("flea-med").value; }
 </script>
-
 </body>
 </html>
