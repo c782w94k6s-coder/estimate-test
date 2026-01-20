@@ -185,10 +185,16 @@ function addPlans(keys, planSet){
 
 // ===== 計算 =====
 function calc(){
+
+  if(!animal.value || !course.value || !planSel.value){
+    alert("動物・健診コース・予防期間を選択してください");
+    return;
+  }
+
   const w=Number(weight.value);
   let total=0;
-  let detail=[];   // ← 内訳用
-  let discountMsg=""; // ← 割引表示用
+  let detail=[];
+  let discountMsg="";
 
   // 健診
   const check = checkup(course.value,w);
