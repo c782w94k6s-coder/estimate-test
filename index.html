@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>健診・予防薬 見積もり</title>
+<style>
+body { font-family: sans-serif; max-width: 600px; margin: 20px auto; }
+label { display: block; margin-top: 15px; font-weight: bold; }
+select, input { width: 100%; padding: 6px; margin-top: 5px; }
+button { margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; }
+.small { font-size: 12px; color: #555; }
+.hidden { display: none; }
+#result { margin-top: 20px; font-size: 16px; }
+</style>
+</head>
+
+<body>
+
+<h2>健診・予防薬 見積もり</h2>
+
+<label>動物</label>
+<select id="animal">
+  <option value="">選択してください</option>
+  <option value="dog">犬</option>
+  <option value="cat">猫</option>
+</select>
+
+<label>体重（kg）</label>
+<input type="number" id="weight" step="0.1">
+
+<label>健診コース</label>
+<select id="course">
+  <option value="">選択してください</option>
+  <option value="light">ライト</option>
+  <option value="standard">スタンダード</option>
+  <option value="premium">プレミアム</option>
+</select>
+
+<div id="dog-plan" class="hidden">
+  <label>予防薬プラン（犬）</label>
+  <select id="dogPlan">
+    <option value="A">A：8ヶ月＋8ヶ月</option>
+    <option value="B">B：12ヶ月＋8ヶ月</option>
+    <option value="C">C：12ヶ月＋12ヶ月</option>
+  </select>
+</div>
+
+<div id="cat-plan" class="hidden">
+  <label>予防薬プラン（猫）</label>
+  <select id="catPlan">
+    <option value="A">A：8ヶ月</option>
+    <option value="B">B：12ヶ月</option>
+  </select>
+</div>
+
+<button onclick="calc()">見積もり計算</button>
+
+<div id="result"></div>
+
+<p class="small">
+※表示金額は目安（税抜）です<br>
+※体重や薬剤変更により金額が前後する場合があります<br>
+※最終金額は診察・会計時に確定します
+</p>
+
+<script>
+// ===== 健診料金 =====
+const coursePrice = {
+  light: [[Infinity,7700]],
+  standard: [[10,18700],[20,20900],[40,23100],[Infinity,25300]],
+  premium: [[10,36300],[20,38500],[40,44000],[Infinity,49500]]
+};
+
+// ===== 予防薬単価 =====
+const prices = {
+  dogFlea: [[10,1400],[20,1700],[40,1900]],
+  dogFilaria: [[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
+  cat: [[2.5,1700],[5,1800],[10,1900]]
+};
+
+// ===== プラン設定 =====
+const dogPlans = {
+  A:{f:8,fi:8,discount:1},
+  B:{f:12,fi:8,discount:1},
+  C:{f:12,fi:12,discount:2}
+};
+const catPlans = {
+  A:{m:8,discount:1},
+  B:{m:12,discount:2}
+};
+
+// ===== 共通関数 =====
+function getPrice(list,w){
+  for(const i of list){ if(w<=i[0]) return i[1]; }
+  return 0;
+}
+
+// ===== UI制御 =====
+animal.onchange = ()=>{
+  dogPlan.parentElement.classList.toggle("hidden", animal.value!=="dog");
+  catPlan.parentElement.classList.toggle("hidden", animal.value!=="cat");
+};
+
+// ===== 計算 =====
+function calc(){
+  const a = animal.value;
+  const w = Number(weight.value);
+  if(!a||!w||!course.value){
+    result.textContent="すべて選択してください";
+    return;
+  }
+
+  const courseFee = getPrice(coursePrice[course.value], w);
+  let drugTotal = 0;
+  let discount = 0;
+
+  if(a==="dog"){
+    const p = dogPlans[dogPlan.value];
+    const flea = getPrice(prices.dogFlea,w);
+    const fi = getPrice(prices.dogFilaria,w);
+    drugTotal = flea*p.f + fi*p.fi;
+    discount = (flea+fi)*p.discount;
+  }
+
+  if(a==="cat"){
+    const p = catPlans[catPlan.value];
+    const unit = getPrice(prices.cat,w);
+    drugTotal = unit*p.m;
+    discount = unit*p.discount;
+  }
+
+  result.innerHTML =
+    "健診料金： "+courseFee.toLocaleString()+" 円<br>"+
+    "予防薬合計： "+drugTotal.toLocaleString()+" 円<br>"+
+    "まとめ買い割引： ▲"+discount.toLocaleString()+" 円<br><br>"+
+    "<strong>合計（税抜）： "+
+    (courseFee+drugTotal-discount).toLocaleString()+
+    " 円</strong>";
+}
+</script>
+
+</body>
+</html>
