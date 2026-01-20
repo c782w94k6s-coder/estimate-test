@@ -67,8 +67,8 @@ button {
 <div id="dog-type-area" class="hidden">
   <label>予防薬の種類</label>
   <select id="dog-type">
-    <option value="combo">ノミダニ＋フィラリア（総合予防薬）</option>
-    <option value="separate">ノミダニ予防薬＋フィラリア予防薬</option>
+    <option value="combo">ノミダニ＋フィラリア(1種類で予防)</option>
+    <option value="separate">ノミダニ予防薬＋フィラリア予防薬(2種類で予防)</option>
   </select>
   <div class="small">※迷った場合はスタッフにお声がけください</div>
 </div>
@@ -123,9 +123,21 @@ const prices = {
 
 // 健診料金（体重別）
 const coursePrice = {
-  light: [[Infinity,7700]],
-  standard: [[10,18700],[20,20900],[40,23100],[Infinity,25300]],
-  premium: [[10,36300],[20,38500],[40,44000],[Infinity,49500]]
+  light: [
+    [Infinity, 7700]
+  ],
+  standard: [
+    [10, 18700],
+    [20, 20900],
+    [40, 23100],
+    [Infinity, 25300]
+  ],
+  premium: [
+    [10, 36300],
+    [20, 38500],
+    [40, 44000],
+    [Infinity, 49500]
+  ]
 };
 
 // 予防期間
