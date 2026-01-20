@@ -4,13 +4,39 @@
 <meta charset="UTF-8">
 <title>健診・予防薬 見積もり</title>
 <style>
-body { font-family: sans-serif; max-width: 600px; margin: 20px auto; }
-label { display: block; margin-top: 15px; font-weight: bold; }
-select, input { width: 100%; padding: 6px; margin-top: 5px; }
-button { margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; }
-.small { font-size: 12px; color: #555; }
-.hidden { display: none; }
-#result { margin-top: 20px; font-size: 16px; }
+body {
+  font-family: sans-serif;
+  max-width: 600px;
+  margin: 20px auto;
+}
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+select, input {
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+}
+.small {
+  font-size: 12px;
+  color: #555;
+}
+.hidden {
+  display: none;
+}
+button {
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  font-size: 16px;
+}
+#result {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
 </style>
 </head>
 
@@ -27,6 +53,7 @@ button { margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; }
 
 <label>体重（kg）</label>
 <input type="number" id="weight" step="0.1">
+<div class="small">※直近の体重を入力してください</div>
 
 <label>健診コース</label>
 <select id="course">
@@ -36,107 +63,182 @@ button { margin-top: 20px; width: 100%; padding: 10px; font-size: 16px; }
   <option value="premium">プレミアム</option>
 </select>
 
-<div id="dog-plan" class="hidden">
-  <label>予防薬プラン（犬）</label>
-  <select id="dogPlan">
-    <option value="A">A：8ヶ月＋8ヶ月</option>
-    <option value="B">B：12ヶ月＋8ヶ月</option>
-    <option value="C">C：12ヶ月＋12ヶ月</option>
+<!-- 犬：予防薬の種類 -->
+<div id="dog-type-area" class="hidden">
+  <label>予防薬の種類</label>
+  <select id="dog-type">
+    <option value="combo">ノミダニ＋フィラリア（総合予防薬）</option>
+    <option value="separate">ノミダニ予防薬＋フィラリア予防薬</option>
+  </select>
+  <div class="small">※迷った場合はスタッフにお声がけください</div>
+</div>
+
+<!-- 犬：総合予防薬 -->
+<div id="combo-area" class="hidden">
+  <label>総合予防薬</label>
+  <select id="combo-med">
+    <option value="cred">クレデリオプラス（食べるタイプ）</option>
+    <option value="nexsp">ネクスガードスペクトラ（食べるタイプ）</option>
   </select>
 </div>
 
-<div id="cat-plan" class="hidden">
-  <label>予防薬プラン（猫）</label>
-  <select id="catPlan">
-    <option value="A">A：8ヶ月</option>
-    <option value="B">B：12ヶ月</option>
+<!-- 犬：別々 -->
+<div id="separate-area" class="hidden">
+  <label>ノミ・マダニ予防薬</label>
+  <select id="flea-med">
+    <option value="effipro">エフィプロデュオ（スポットタイプ）</option>
+    <option value="nex">ネクスガード（食べるタイプ）</option>
+  </select>
+
+  <label>フィラリア予防薬</label>
+  <select id="filaria-med">
+    <option value="iver">イベルメック（食べるタイプ）</option>
   </select>
 </div>
+
+<label>予防期間</label>
+<select id="plan"></select>
+<div class="small">※まとめて購入することで割引が適用されます</div>
 
 <button onclick="calc()">見積もり計算</button>
 
 <div id="result"></div>
 
-<p class="small">
+<p class="small" style="margin-top:20px;">
 ※表示金額は目安（税抜）です<br>
 ※体重や薬剤変更により金額が前後する場合があります<br>
 ※最終金額は診察・会計時に確定します
 </p>
 
 <script>
-// ===== 健診料金 =====
-const coursePrice = {
-  light: [[Infinity,7700]],
-  standard: [[10,18700],[20,20900],[40,23100],[Infinity,25300]],
-  premium: [[10,36300],[20,38500],[40,44000],[Infinity,49500]]
-};
-
-// ===== 予防薬単価 =====
+// 予防薬単価
 const prices = {
-  dogFlea: [[10,1400],[20,1700],[40,1900]],
-  dogFilaria: [[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
+  cred: [[2.8,2200],[5.5,2300],[11,2800],[22,3500],[45,4000]],
+  nexsp: [[3.6,3000],[7.5,3400],[15,3800],[30,4400],[60,4700]],
+  effipro: [[10,1400],[20,1700],[40,1900]],
+  nex: [[4.5,1600],[11,1800],[27,2000],[55,2300]],
+  iver: [[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
   cat: [[2.5,1700],[5,1800],[10,1900]]
 };
 
-// ===== プラン設定 =====
-const dogPlans = {
-  A:{f:8,fi:8,discount:1},
-  B:{f:12,fi:8,discount:1},
-  C:{f:12,fi:12,discount:2}
-};
-const catPlans = {
-  A:{m:8,discount:1},
-  B:{m:12,discount:2}
-};
+// 健診料金
+function checkupPrice(course, w){
+  if(course === "light") return 7700;
 
-// ===== 共通関数 =====
-function getPrice(list,w){
-  for(const i of list){ if(w<=i[0]) return i[1]; }
+  if(course === "standard"){
+    if(w <= 10) return 18700;
+    if(w <= 20) return 20900;
+    if(w <= 40) return 23100;
+    return 25300;
+  }
+
+  if(course === "premium"){
+    if(w <= 10) return 36300;
+    if(w <= 20) return 38500;
+    if(w <= 40) return 44000;
+    return 49500;
+  }
   return 0;
 }
 
-// ===== UI制御 =====
-animal.onchange = ()=>{
-  dogPlan.parentElement.classList.toggle("hidden", animal.value!=="dog");
-  catPlan.parentElement.classList.toggle("hidden", animal.value!=="cat");
+// プラン
+const planData = {
+  combo: {
+    A:{months:8, discount:1},
+    C:{months:12, discount:2}
+  },
+  separate: {
+    A:{f:8, fi:8, discount:1},
+    B:{f:12, fi:8, discount:1},
+    C:{f:12, fi:12, discount:2}
+  },
+  cat: {
+    A:{months:8, discount:1},
+    B:{months:12, discount:2}
+  }
 };
 
-// ===== 計算 =====
-function calc(){
-  const a = animal.value;
-  const w = Number(weight.value);
-  if(!a||!w||!course.value){
-    result.textContent="すべて選択してください";
-    return;
+function getPrice(list, w){
+  for(let i of list){
+    if(w <= i[0]) return i[1];
   }
-
-  const courseFee = getPrice(coursePrice[course.value], w);
-  let drugTotal = 0;
-  let discount = 0;
-
-  if(a==="dog"){
-    const p = dogPlans[dogPlan.value];
-    const flea = getPrice(prices.dogFlea,w);
-    const fi = getPrice(prices.dogFilaria,w);
-    drugTotal = flea*p.f + fi*p.fi;
-    discount = (flea+fi)*p.discount;
-  }
-
-  if(a==="cat"){
-    const p = catPlans[catPlan.value];
-    const unit = getPrice(prices.cat,w);
-    drugTotal = unit*p.m;
-    discount = unit*p.discount;
-  }
-
-  result.innerHTML =
-    "健診料金： "+courseFee.toLocaleString()+" 円<br>"+
-    "予防薬合計： "+drugTotal.toLocaleString()+" 円<br>"+
-    "まとめ買い割引： ▲"+discount.toLocaleString()+" 円<br><br>"+
-    "<strong>合計（税抜）： "+
-    (courseFee+drugTotal-discount).toLocaleString()+
-    " 円</strong>";
+  return 0;
 }
+
+const animal = document.getElementById("animal");
+const dogTypeArea = document.getElementById("dog-type-area");
+const comboArea = document.getElementById("combo-area");
+const separateArea = document.getElementById("separate-area");
+const plan = document.getElementById("plan");
+const dogType = document.getElementById("dog-type");
+
+animal.onchange = updateUI;
+dogType.onchange = updateUI;
+
+function updateUI(){
+  plan.innerHTML = "";
+  comboArea.classList.add("hidden");
+  separateArea.classList.add("hidden");
+  dogTypeArea.classList.add("hidden");
+
+  if(animal.value === "dog"){
+    dogTypeArea.classList.remove("hidden");
+    if(dogType.value === "combo"){
+      comboArea.classList.remove("hidden");
+      addPlans(planData.combo);
+    } else {
+      separateArea.classList.remove("hidden");
+      addPlans(planData.separate);
+    }
+  }
+
+  if(animal.value === "cat"){
+    addPlans(planData.cat);
+  }
+}
+
+function addPlans(obj){
+  for(let k in obj){
+    let o = document.createElement("option");
+    o.value = k;
+    o.textContent = k;
+    plan.appendChild(o);
+  }
+}
+
+function calc(){
+  const w = Number(weight.value);
+  let total = 0;
+
+  // 健診代
+  total += checkupPrice(course.value, w);
+
+  if(animal.value === "dog"){
+    if(dogType.value === "combo"){
+      const p = getPrice(prices[comboMed()], w);
+      const d = planData.combo[plan.value];
+      total += p * d.months - p * d.discount;
+    } else {
+      const f = getPrice(prices[fleaMed()], w);
+      const fi = getPrice(prices.iver, w);
+      const d = planData.separate[plan.value];
+      total += f * d.f + fi * d.fi - (f + fi) * d.discount;
+    }
+  }
+
+  if(animal.value === "cat"){
+    const p = getPrice(prices.cat, w);
+    const d = planData.cat[plan.value];
+    total += p * d.months - p * d.discount;
+  }
+
+  result.textContent =
+    "健診＋予防薬 合計（税抜）： " +
+    total.toLocaleString() + " 円";
+}
+
+function comboMed(){ return document.getElementById("combo-med").value; }
+function fleaMed(){ return document.getElementById("flea-med").value; }
 </script>
 
 </body>
