@@ -126,10 +126,28 @@ const plans = {
     C: { label: "C：12ヶ月", m: 12, d: 2 }
   },
   separate: {
-    A: { label: "A：ノミダニ8ヶ月／フィラリア8ヶ月", f: 8, fi: 8, d: 1 },
-    B: { label: "B：ノミダニ12ヶ月／フィラリア8ヶ月", f: 12, fi: 8, d: 1 },
-    C: { label: "C：ノミダニ12ヶ月／フィラリア12ヶ月", f: 12, fi: 12, d: 2 }
+  A: {
+    label: "A：ノミダニ8ヶ月／フィラリア8ヶ月",
+    f: 8,
+    f_disc: 1,   // ノミダニ −1
+    fi: 8,
+    fi_disc: 1   // フィラリア −1
   },
+  B: {
+    label: "B：ノミダニ12ヶ月／フィラリア8ヶ月",
+    f: 12,
+    f_disc: 2,   // ノミダニ −2
+    fi: 8,
+    fi_disc: 1   // フィラリア −1
+  },
+  C: {
+    label: "C：ノミダニ12ヶ月／フィラリア12ヶ月",
+    f: 12,
+    f_disc: 2,   // ノミダニ −2
+    fi: 12,
+    fi_disc: 2   // フィラリア −2
+  }
+}
   cat: {
     A: { label: "A：8ヶ月", m: 8, d: 1 },
     B: { label: "B：12ヶ月", m: 12, d: 2 }
@@ -219,7 +237,9 @@ function calc(){
       const f=getPrice(prices[document.getElementById("flea-med").value],w);
       const fi=getPrice(prices.iver,w);
       const d=plans.separate[planSel.value];
-      const sub = f*d.f + fi*d.fi - (f+fi)*d.d;
+      const sub =
+  (f * d.f - f * d.f_disc) +
+  (fi * d.fi - fi * d.fi_disc);
 
       total += sub;
       detail.push("ノミダニ予防薬＋フィラリア予防薬：" + sub.toLocaleString() + "円");
@@ -235,7 +255,9 @@ function calc(){
 
     total += sub;
     detail.push("予防薬：" + sub.toLocaleString() + "円");
-    discountMsg = "まとめ買いで " + d.d + "個分お得！";
+    discountMsg =
+  "ノミダニ " + d.f_disc + "個分＋フィラリア " +
+  d.fi_disc + "個分お得！";
   }
 
   // ===== 表示 =====
