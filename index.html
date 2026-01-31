@@ -250,17 +250,15 @@ function calc(){
   }
 
   // ===== 猫 =====
-  if(animal.value==="cat"){
-    const p=getPrice(prices.cat,w);
-    const d=plans.cat[planSel.value];
-    const sub = p*d.m - p*d.d;
+if(animal.value==="cat"){
+  const p=getPrice(prices.cat,w);
+  const d=plans.cat[planSel.value];
+  const sub = p*d.m - p*d.d;
 
-    total += sub;
-    detail.push("予防薬：" + sub.toLocaleString() + "円");
-    discountMsg =
-  "ノミダニ " + d.f_disc + "個分＋フィラリア " +
-  d.fi_disc + "個分お得！";
-  }
+  total += sub;
+  detail.push("予防薬：" + sub.toLocaleString() + "円");
+  discountMsg = "まとめ買いで " + d.d + "個分お得！";
+}
 
   // ===== 表示 =====
   document.getElementById("result").textContent =
