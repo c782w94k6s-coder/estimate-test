@@ -35,7 +35,12 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
   <option value="light">ライト</option>
   <option value="standard">スタンダード</option>
   <option value="premium">プレミアム</option>
+  <option value="ct">CTコース</option>
 </select>
+  <div id="ct-note" class="small hidden" style="color:#b00000; margin-top:6px;">
+※CTコースは別途 読影料・静脈留置代・点滴代 がかかります<br>
+※体重・体格・性格などにより、全身麻酔または鎮静麻酔が必要となる場合があります
+</div>
 
 <!-- 犬：予防薬の種類 -->
 <div id="dog-type-area" class="box hidden">
@@ -115,6 +120,13 @@ function checkup(course,w){
     if(w<=20) return 38500;
     if(w<=40) return 44000;
     return 49500;
+  }
+  if(course==="ct"){
+    if(w<=10) return 41700;
+    if(w<=20) return 51700;
+    if(w<=30) return 61700;
+    if(w<=40) return 71700;
+    return 81700; // 40kg超（+10000円）
   }
   return 0;
 }
