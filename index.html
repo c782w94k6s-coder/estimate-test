@@ -186,6 +186,13 @@ function updateUI(){
   document.getElementById("combo-area").classList.add("hidden");
   document.getElementById("separate-area").classList.add("hidden");
 
+  const course = document.getElementById("course").value;
+  if(course==="ct"){
+    document.getElementById("ct-note").classList.remove("hidden");
+  }else{
+    document.getElementById("ct-note").classList.add("hidden");
+  }
+
   if(animal.value==="dog"){
     document.getElementById("dog-type-area").classList.remove("hidden");
     const type=document.querySelector("input[name='dogtype']:checked").value;
