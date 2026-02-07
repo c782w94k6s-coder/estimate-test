@@ -102,20 +102,31 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
   
 <label>予防期間</label>
 <select id="plan"></select>
-<div class="small">※まとめて購入で割引が適用されます</div>
-  
-<!-- 犬：予防薬の種類 -->
-<div id="dog-type-area" class="box hidden">
-  <label>予防薬の種類</label>
+<div class="small">※プランによって予防方法が異なります</div>
 
-  <input type="radio" name="dogtype" value="combo" checked>
-  ノミダニ＋フィラリア【1種類で予防】
-  <div class="small">※1種類でまとめて予防します</div><br>
+<!-- 犬：予防薬の選択（Bプラン用） -->
+<div id="dog-pattern-area" class="box hidden">
+  <label>② 予防薬の種類を選んでください</label>
 
-  <input type="radio" name="dogtype" value="separate">
-  ノミダニ予防薬＋フィラリア予防薬【2種類で予防】
-  <div class="small">※それぞれ別のお薬を使用します</div>
+  <input type="radio" name="dogpattern" value="b1" checked>
+  ◉ パターン①：2種類で予防<br>
+  <span class="small">
+    ・ノミダニ予防薬（4ヶ月）<br>
+    ・総合予防薬（8ヶ月）
+  </span>
+  <br><br>
 
+  <input type="radio" name="dogpattern" value="b2">
+  ◉ パターン②：2種類で予防<br>
+  <span class="small">
+    ・ノミダニ予防薬（12ヶ月）<br>
+    ・フィラリア予防薬（8ヶ月）
+  </span>
+
+  <div class="small" style="margin-top:8px;">
+    ※Bプランのみ選択できます
+  </div>
+</dib>
   <div class="small">※迷った場合はスタッフにお声がけください</div>
 </div>
 
@@ -311,20 +322,39 @@ function updateUI(){
   }else{
     document.getElementById("ct-note").classList.add("hidden");
   }
+if(animal.value==="dog"){
+  const plan = planSel.value;
 
-  if(animal.value==="dog"){
-    document.getElementById("dog-type-area").classList.remove("hidden");
-    const type=document.querySelector("input[name='dogtype']:checked").value;
+  // 共通表示
+  document.getElementById("combo-area").classList.add("hidden");
+  document.getElementById("separate-area").classList.add("hidden");
+  document.getElementById("dog-pattern-area").classList.add("hidden");
 
-    if(type==="combo"){
-      document.getElementById("combo-area").classList.remove("hidden");
-      addPlans(["A","C"], plans.combo);
-    }else{
-      document.getElementById("separate-area").classList.remove("hidden");
-      addPlans(["A","B","C"], plans.separate);
-    }
+  // A・C → 総合のみ
+  if(plan==="A" || plan==="C"){
+    document.getElementById("combo-area").classList.remove("hidden");
   }
 
+  // B → パターン選択
+  if(plan==="B"){
+    document.getElementById("dog-pattern-area").classList.remove("hidden");
+
+    const pattern =
+      document.querySelector("input[name='dogpattern']:checked").value;
+
+    if(pattern==="b1"){
+      // ノミダニ4ヶ月＋総合8ヶ月
+      document.getElementById("combo-area").classList.remove("hidden");
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
+
+    if(pattern==="b2"){
+      // ノミダニ12ヶ月＋フィラリア8ヶ月
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
+  }
+}
+ 
   if(animal.value==="cat"){
     document.getElementById("cat-med-area").classList.remove("hidden");
     addPlans(["A","B"], plans.cat);
@@ -389,6 +419,18 @@ function calc(){
   d.fi_disc + "個分お得！";
     }
   }
+  if(planSel.value==="B"){
+  const pattern =
+    document.querySelector("input[name='dogpattern']:checked").value;
+
+  if(pattern==="b1"){
+    // ノミダニ4ヶ月（割引1）＋総合8ヶ月（割引1）
+  }
+
+  if(pattern==="b2"){
+    // ノミダニ12ヶ月（割引1）＋フィラリア8ヶ月（割引1）
+  }
+}
   // ===== 猫 =====
 if(animal.value==="cat"){
   const med=document.getElementById("cat-med").value;
