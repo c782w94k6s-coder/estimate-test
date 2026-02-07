@@ -4,6 +4,53 @@
 <meta charset="UTF-8">
 <title>かもがわ年間パックお見積り</title>
 <style>
+:root{
+  --main-green:#0b6b3a;
+  --sub-green:#e6f2ec;
+  --border-green:#9ccbb6;
+}
+.wrapper{
+  background:#fff;
+  border:2px solid var(--border-green);
+  border-radius:10px;
+  padding:20px;
+}
+h2{
+  background:var(--main-green);
+  color:#fff;
+  padding:12px;
+  border-radius:6px;
+  text-align:center;
+  font-size:18px;
+}
+.section-title{
+  font-size:15px;
+  font-weight:bold;
+  color:var(--main-green);
+  border-left:5px solid var(--main-green);
+  padding-left:8px;
+  margin-top:24px;
+}
+#result{
+  background:var(--sub-green);
+  border:2px solid var(--border-green);
+  border-radius:8px;
+  padding:14px;
+  font-size:20px;
+}
+.cal{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+.cal th,.cal td{
+  border:1px solid var(--border-green);
+  padding:6px;
+  text-align:center;
+}
+.cal th{
+  background:var(--sub-green);
+}
 body{font-family:sans-serif;max-width:680px;margin:20px auto;}
 label{font-weight:bold;display:block;margin-top:16px;}
 select,input{width:100%;padding:6px;margin-top:6px;}
@@ -16,6 +63,7 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
 </head>
 
 <body>
+<div class="wrapper">
 <h2>かもがわ年間パックお見積り</h2>
 
 <label>動物</label>
@@ -96,6 +144,23 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
 <button onclick="calc()">見積もり計算</button>
 <div id="result"></div>
 <div id="detail" class="small"></div>
+  <div id="calendar" class="box hidden">
+  <div class="section-title">予防薬スケジュール（目安）</div>
+  <table class="cal">
+    <tr>
+      <th>月</th>
+      <td>1</td><td>2</td><td>3</td><td>4</td>
+      <td>5</td><td>6</td><td>7</td><td>8</td>
+      <td>9</td><td>10</td><td>11</td><td>12</td>
+    </tr>
+    <tr>
+      <th>投与</th>
+      <td colspan="12" style="text-align:center;">
+        ※ここに表示されます
+      </td>
+    </tr>
+  </table>
+</div>
 
 <p class="small" style="margin-top:20px;">
 ※別途診察料(1000円)がかかります<br>
@@ -305,5 +370,5 @@ if(animal.value==="cat"){
 
 updateUI();
 </script>
-</body>
+</div></body>
 </html>
