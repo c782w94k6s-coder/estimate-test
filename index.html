@@ -99,7 +99,11 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
 ※CTコースは別途 読影料・静脈留置代・点滴代 がかかります<br>
 ※体重・体格・性格などにより、全身麻酔または鎮静麻酔が必要となる場合があります
 </div>
-
+  
+<label>予防期間</label>
+<select id="plan"></select>
+<div class="small">※まとめて購入で割引が適用されます</div>
+  
 <!-- 犬：予防薬の種類 -->
 <div id="dog-type-area" class="box hidden">
   <label>予防薬の種類</label>
@@ -146,11 +150,7 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
     <option value="catcombo">ネクスガードキャットコンボ(スポットタイプ)</option>
   </select>
 </div>
-
-<label>予防期間</label>
-<select id="plan"></select>
-<div class="small">※まとめて購入で割引が適用されます</div>
-
+  
 <button onclick="calc()">見積もり計算</button>
 <div id="result"></div>
 <div id="detail" class="small"></div>
