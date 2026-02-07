@@ -306,11 +306,9 @@ const animal=document.getElementById("animal");
 const planSel=document.getElementById("plan");
 animal.onchange=updateUI;
 course.onchange=updateUI;
-  .forEach(r=>r.onchange=updateUI);
 
 function updateUI(){
   planSel.innerHTML="";
-  document.getElementById("dog-type-area").classList.add("hidden");
   document.getElementById("combo-area").classList.add("hidden");
   document.getElementById("separate-area").classList.add("hidden");
     document.getElementById("cat-med-area").classList.add("hidden");
@@ -324,12 +322,36 @@ function updateUI(){
   }else{
     document.getElementById("ct-note").classList.add("hidden");
   }
-if(animal.value==="dog"){
-  addPlans(["A","B","C"], {
-    A:{label:"A：ノミダニ8ヶ月／フィラリア8ヶ月"},
-    B:{label:"B：ノミダニ12ヶ月／フィラリア8ヶ月"},
-    C:{label:"C：ノミダニ12ヶ月／フィラリア12ヶ月"}
-  });
+if (animal.value === "dog") {
+  addPlans(["A","B","C"], plans.separate);
+
+  const plan = planSel.value;
+
+  document.getElementById("combo-area").classList.add("hidden");
+  document.getElementById("separate-area").classList.add("hidden");
+  document.getElementById("dog-pattern-area").classList.add("hidden");
+
+  // A・C → ノミ＋フィラリア
+  if (plan === "A" || plan === "C") {
+    document.getElementById("separate-area").classList.remove("hidden");
+  }
+
+  // B → パターン選択
+  if (plan === "B") {
+    document.getElementById("dog-pattern-area").classList.remove("hidden");
+
+    const pattern =
+      document.querySelector("input[name='dogpattern']:checked").value;
+
+    if (pattern === "b1") {
+      document.getElementById("combo-area").classList.remove("hidden");
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
+
+    if (pattern === "b2") {
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
+  }
 }
 
   // 共通表示
@@ -338,7 +360,7 @@ if(animal.value==="dog"){
   document.getElementById("dog-pattern-area").classList.add("hidden");
 
   // A・C → 総合のみ
-  if(plan==="A" || plan==="C"){
+  const plan =planSel.value;
     document.getElementById("combo-area").classList.remove("hidden");
   }
 
@@ -398,7 +420,6 @@ function calc(){
   total += check;
   detail.push("健診：" + check.toLocaleString() + "円");
 
-  // ===== 犬 =====
   // ===== 犬 =====
 if(animal.value==="dog"){
 
