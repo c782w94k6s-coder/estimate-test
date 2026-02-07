@@ -391,43 +391,78 @@ function calc(){
   detail.push("健診：" + check.toLocaleString() + "円");
 
   // ===== 犬 =====
-  if(animal.value==="dog"){
-    const type=document.querySelector("input[name='dogtype']:checked").value;
+  // ===== 犬 =====
+if(animal.value==="dog"){
 
-    if(type==="combo"){
-      const p=getPrice(prices[document.getElementById("combo-med").value],w);
-      const d=plans.combo[planSel.value];
-      const sub = p*d.m - p*d.d;
+  const plan = planSel.value;
 
-      total += sub;
-      detail.push("予防薬（総合）：" + sub.toLocaleString() + "円");
-      discountMsg = "まとめ買いで " + d.d + "個分お得！";
+  /* ========= A・Cプラン（総合のみ） ========= */
+  if(plan==="A" || plan==="C"){
+    const p = getPrice(
+      prices[document.getElementById("combo-med").value],
+      w
+    );
+    const d = plans.combo[plan];
 
-    }else{
-      const f=getPrice(prices[document.getElementById("flea-med").value],w);
-      const fi=getPrice(prices.iver,w);
-      const d=plans.separate[planSel.value];
-      const sub =
-  (f * d.f - f * d.f_disc) +
-  (fi * d.fi - fi * d.fi_disc);
+    const sub = p * d.m - p * d.d;
 
-      total += sub;
-      detail.push("ノミダニ予防薬＋フィラリア予防薬：" + sub.toLocaleString() + "円");
-      discountMsg =
-  "ノミダニ " + d.f_disc + "個分＋フィラリア " +
-  d.fi_disc + "個分お得！";
+    total += sub;
+    detail.push("予防薬（総合）：" + sub.toLocaleString() + "円");
+    discountMsg = "まとめ買いで " + d.d + "個分お得！";
+  }
+
+  /* ========= Bプラン ========= */
+  if(plan==="B"){
+    const pattern =
+      document.querySelector("input[name='dogpattern']:checked").value;
+
+    const fleaPrice = getPrice(
+      prices[document.getElementById("flea-med").value],
+      w
+    );
+    const comboPrice = getPrice(
+      prices[document.getElementById("combo-med").value],
+      w
+    );
+    const heartPrice = getPrice(prices.iver, w);
+
+    let sub = 0;
+
+    /* --- パターン① ---
+       ノミダニ4ヶ月（-1）
+       総合8ヶ月（-1）
+    */
+    if(pattern==="b1"){
+      const flea = fleaPrice * 4 - fleaPrice * 1;
+      const combo = comboPrice * 8 - comboPrice * 1;
+
+      sub = flea + combo;
+
+      detail.push(
+        "Bプラン①：ノミダニ4ヶ月＋総合8ヶ月：" +
+        sub.toLocaleString() + "円"
+      );
+      discountMsg = "ノミダニ1個分＋総合1個分お得！";
     }
-  }
-  if(planSel.value==="B"){
-  const pattern =
-    document.querySelector("input[name='dogpattern']:checked").value;
 
-  if(pattern==="b1"){
-    // ノミダニ4ヶ月（割引1）＋総合8ヶ月（割引1）
-  }
+    /* --- パターン② ---
+       ノミダニ12ヶ月（-1）
+       フィラリア8ヶ月（-1）
+    */
+    if(pattern==="b2"){
+      const flea = fleaPrice * 12 - fleaPrice * 1;
+      const heart = heartPrice * 8 - heartPrice * 1;
 
-  if(pattern==="b2"){
-    // ノミダニ12ヶ月（割引1）＋フィラリア8ヶ月（割引1）
+      sub = flea + heart;
+
+      detail.push(
+        "Bプラン②：ノミダニ12ヶ月＋フィラリア8ヶ月：" +
+        sub.toLocaleString() + "円"
+      );
+      discountMsg = "ノミダニ1個分＋フィラリア1個分お得！";
+    }
+
+    total += sub;
   }
 }
   // ===== 猫 =====
