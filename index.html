@@ -126,7 +126,7 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
   <div class="small" style="margin-top:8px;">
     ※Bプランのみ選択できます
   </div>
-</dib>
+</div>
   <div class="small">※迷った場合はスタッフにお声がけください</div>
 </div>
 
@@ -306,7 +306,6 @@ const animal=document.getElementById("animal");
 const planSel=document.getElementById("plan");
 animal.onchange=updateUI;
 course.onchange=updateUI;
-document.querySelectorAll("input[name='dogtype']")
   .forEach(r=>r.onchange=updateUI);
 
 function updateUI(){
