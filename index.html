@@ -3,72 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <title>かもがわ年間パックお見積り</title>
+
 <style>
 :root{
   --main-green:#0b6b3a;
   --sub-green:#e6f2ec;
   --border-green:#9ccbb6;
 }
-.wrapper{
-  background:#fff;
-  border:2px solid var(--border-green);
-  border-radius:10px;
-  padding:20px;
-}
-h2{
-  background:var(--main-green);
-  color:#fff;
-  padding:12px;
-  border-radius:6px;
-  text-align:center;
-  font-size:18px;
-}
-.section-title{
-  font-size:15px;
-  font-weight:bold;
-  color:var(--main-green);
-  border-left:5px solid var(--main-green);
-  padding-left:8px;
-  margin-top:24px;
-}
-#result{
-  background:var(--sub-green);
-  border:2px solid var(--border-green);
-  border-radius:8px;
-  padding:14px;
-  font-size:20px;
-}
-.cal{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-}
-.cal th,.cal td{
-  border:1px solid var(--border-green);
-  padding:6px;
-  text-align:center;
-}
-.cal th{
-  background:var(--sub-green);
-}
-.cal .combo{
-  background:#cfe9dc;
-  color:#0b6b3a;
-  font-weight:bold;
-}
-.cal .flea{
-  background:#fff2cc;
-  color:#7a5a00;
-  font-weight:bold;
-}
 body{font-family:sans-serif;max-width:680px;margin:20px auto;}
+.wrapper{border:2px solid var(--border-green);border-radius:10px;padding:20px;}
+h2{background:var(--main-green);color:#fff;padding:12px;border-radius:6px;text-align:center;}
 label{font-weight:bold;display:block;margin-top:16px;}
 select,input{width:100%;padding:6px;margin-top:6px;}
 .small{font-size:12px;color:#555;}
 .hidden{display:none;}
 .box{border:1px solid #ccc;padding:10px;margin-top:10px;}
 button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
-#result{margin-top:20px;font-size:18px;font-weight:bold;}
+
+#result{margin-top:20px;background:var(--sub-green);padding:14px;border-radius:8px;font-size:18px;font-weight:bold;}
+
+.cal{width:100%;border-collapse:collapse;margin-top:10px;}
+.cal th,.cal td{border:1px solid var(--border-green);padding:6px;text-align:center;}
+.cal th{background:var(--sub-green);}
+.combo{background:#cfe9dc;font-weight:bold;}
+.flea{background:#fff2cc;font-weight:bold;}
 </style>
 </head>
 
@@ -85,7 +43,6 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
 
 <label>体重（kg）</label>
 <input type="number" id="weight" step="0.1">
-<div class="small">※直近の体重を入力してください</div>
 
 <label>健診コース</label>
 <select id="course">
@@ -93,428 +50,144 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
   <option value="light">ライト</option>
   <option value="standard">スタンダード</option>
   <option value="premium">プレミアム</option>
-  <option value="ct">CTコース</option>
+  <option value="ct">CT</option>
 </select>
-  <div id="ct-note" class="small hidden" style="color:#b00000; margin-top:6px;">
-※CTコースは別途 読影料・静脈留置代・点滴代 がかかります<br>
-※体重・体格・性格などにより、全身麻酔または鎮静麻酔が必要となる場合があります
+
+<div id="ct-note" class="small hidden" style="color:#b00000;">
+※CTは別途麻酔・処置費用がかかる場合があります
 </div>
-  
+
 <label>予防期間</label>
 <select id="plan"></select>
-<div class="small">※プランによって予防方法が異なります</div>
 
-<!-- 犬：予防薬の選択（Bプラン用） -->
+<!-- 犬Bプラン -->
 <div id="dog-pattern-area" class="box hidden">
-  <label>② 予防薬の種類を選んでください</label>
+  <label>② 予防薬の種類</label>
 
   <input type="radio" name="dogpattern" value="b1" checked>
-  ◉ パターン①：2種類で予防<br>
-  <span class="small">
-    ・ノミダニ予防薬（4ヶ月）<br>
-    ・総合予防薬（8ヶ月）
-  </span>
-  <br><br>
+  パターン①：ノミダニ4ヶ月＋総合8ヶ月<br><br>
 
   <input type="radio" name="dogpattern" value="b2">
-  ◉ パターン②：2種類で予防<br>
-  <span class="small">
-    ・ノミダニ予防薬（12ヶ月）<br>
-    ・フィラリア予防薬（8ヶ月）
-  </span>
-
-  <div class="small" style="margin-top:8px;">
-    ※Bプランのみ選択できます
-  </div>
-</div>
-  <div class="small">※迷った場合はスタッフにお声がけください</div>
+  パターン②：ノミダニ12ヶ月＋フィラリア8ヶ月
 </div>
 
-<!-- 犬：総合 -->
 <div id="combo-area" class="box hidden">
   <label>総合予防薬</label>
   <select id="combo-med">
-    <option value="cred">クレデリオプラス（タブレットタイプ）</option>
-    <option value="nexsp">ネクスガードスペクトラ（キューブタイプ）</option>
+    <option value="cred">クレデリオプラス</option>
+    <option value="nexsp">ネクスガードスペクトラ</option>
   </select>
 </div>
 
-<!-- 犬：別々 -->
 <div id="separate-area" class="box hidden">
-  <label>ノミ・マダニ予防薬</label>
+  <label>ノミダニ予防薬</label>
   <select id="flea-med">
-    <option value="effipro">エフィプロデュオ（スポットタイプ）</option>
-    <option value="nex">ネクスガード（食べるタイプ）</option>
-  </select>
-
-  <label style="margin-top:10px;">フィラリア予防薬</label>
-  <select disabled>
-    <option>イベルメック（食べるタイプ）</option>
+    <option value="effipro">エフィプロ</option>
+    <option value="nex">ネクスガード</option>
   </select>
 </div>
 
-  <!-- 猫：予防薬 -->
 <div id="cat-med-area" class="box hidden">
-  <label>予防薬</label>
+  <label>猫の予防薬</label>
   <select id="cat-med">
-    <option value="revplus">レボリューションプラス(スポットタイプ)</option>
-    <option value="catcombo">ネクスガードキャットコンボ(スポットタイプ)</option>
+    <option value="revplus">レボリューションプラス</option>
+    <option value="catcombo">ネクスガードキャットコンボ</option>
   </select>
 </div>
-  
-<button onclick="calc()">見積もり計算</button>
+
+<button on‍click="calc()">見積もり計算</button>
+
 <div id="result"></div>
 <div id="detail" class="small"></div>
-  <div id="calendar" class="box hidden">
-  <div class="section-title">予防薬スケジュール（目安）</div>
-  <table class="cal">
-    <tr>
-      <th>月</th>
-      <td>1</td><td>2</td><td>3</td><td>4</td>
-      <td>5</td><td>6</td><td>7</td><td>8</td>
-      <td>9</td><td>10</td><td>11</td><td>12</td>
-    </tr>
-    <tr id="cal-row">
-  <th>投与</th>
-  <td></td><td></td><td></td><td></td>
-  <td></td><td></td><td></td><td></td>
-  <td></td><td></td><td></td><td></td>
-</tr>
+
+<div id="calendar" class="box hidden">
+<table class="cal">
+<tr><th>月</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
+<tr id="cal-row"><th>投与</th><td colspan="12"></td></tr>
 </table>
 </div>
-
-<p class="small" style="margin-top:20px;">
-※別途診察料(1000円)がかかります<br>
-※表示金額は目安（税抜）です<br>
-※体重や薬剤変更により金額が前後する場合があります<br>
-※最終金額は診察・会計時に確定します
-</p>
+</div>
 
 <script>
-// ===== 単価 =====
 const prices={
-  cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500],[45,4000]],
-  nexsp:[[3.6,3000],[7.5,3400],[15,3800],[30,4400],[60,4700]],
-  effipro:[[10,1400],[20,1700],[40,1900]],
-  nex:[[4.5,1600],[11,1800],[27,2000],[55,2300]],
-  iver:[[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
-  revplus:[[2.5,1700],[5,1800],[10,1900]],
-  catcombo:[[2.5,2100],[7.5,2200]]
+  cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500]],
+  nexsp:[[3.6,3000],[7.5,3400],[15,3800]],
+  effipro:[[10,1400],[20,1700]],
+  nex:[[4.5,1600],[11,1800]],
+  iver:[[5.6,1000],[11.3,1300]],
+  revplus:[[5,1800]],
+  catcombo:[[7.5,2200]]
 };
 
-// ===== 健診料金 =====
-function checkup(course,w){
-  if(course==="light") return 7700;
-  if(course==="standard"){
-    if(w<=10) return 18700;
-    if(w<=20) return 20900;
-    if(w<=40) return 23100;
-    return 25300;
-  }
-  if(course==="premium"){
-    if(w<=10) return 36300;
-    if(w<=20) return 38500;
-    if(w<=40) return 44000;
-    return 49500;
-  }
-  if(course==="ct"){
-    if(w<=10) return 41700;
-    if(w<=20) return 51700;
-    if(w<=30) return 61700;
-    if(w<=40) return 71700;
-    return 81700; // 40kg超（+10000円）
-  }
-  return 0;
-}
-
-// ===== プラン =====
-const plans = {
-  combo: {
-    A: { label: "A：8ヶ月", m: 8, d: 1 },
-    C: { label: "C：12ヶ月", m: 12, d: 2 }
-  },
-  separate: {
-    A: {
-      label: "A：ノミダニ8ヶ月／フィラリア8ヶ月",
-      f: 8,
-      f_disc: 1,
-      fi: 8,
-      fi_disc: 1
-    },
-    B: {
-      label: "B：ノミダニ12ヶ月／フィラリア8ヶ月",
-      f: 12,
-      f_disc: 2,
-      fi: 8,
-      fi_disc: 1
-    },
-    C: {
-      label: "C：ノミダニ12ヶ月／フィラリア12ヶ月",
-      f: 12,
-      f_disc: 2,
-      fi: 12,
-      fi_disc: 2
-    }
-  },   //
-  cat: {
-    A: { label: "A：8ヶ月", m: 8, d: 1 },
-    B: { label: "B：12ヶ月", m: 12, d: 2 }
-  }
-};
 function getPrice(list,w){
-  for(const i of list){
-    if(w<=i[0]) return i[1];
-  }
-  return 0;
+  return list.find(i=>w<=i[0])[1];
 }
-function renderCalendar(animal, plan){
-  const row = document.getElementById("cal-row").children;
-  document.getElementById("calendar").classList.remove("hidden");
-  // リセット
-  for(let i=1;i<=12;i++){
-    row[i].textContent = "";
-    row[i].className = "";
-  }
-  // 犬：B（混合）
-  if(animal==="dog" && plan==="B"){
-    for(let i=1;i<=4;i++){
-      row[i].textContent = "ノミダニ";
-      row[i].classList.add("flea");
-    }
-    for(let i=5;i<=12;i++){
-      row[i].textContent = "総合";
-      row[i].classList.add("combo");
-    }
-  }
-  // 犬：A / C
-  if(animal==="dog" && plan!=="B"){
-    for(let i=1;i<=12;i++){
-      row[i].textContent = "総合";
-      row[i].classList.add("combo");
-    }
-  }
-  // 猫
-  if(animal==="cat"){
-    for(let i=1;i<=12;i++){
-      row[i].textContent = "予防薬";
-      row[i].classList.add("combo");
-    }
-  }
-}
-// ===== UI制御 =====
+
 const animal=document.getElementById("animal");
 const planSel=document.getElementById("plan");
+
 animal.onchange=updateUI;
 course.onchange=updateUI;
+document.querySelectorAll("input[name='dogpattern']").forEach(r=>r.onchange=updateUI);
 
 function updateUI(){
   planSel.innerHTML="";
-  document.getElementById("combo-area").classList.add("hidden");
-  document.getElementById("separate-area").classList.add("hidden");
-    document.getElementById("cat-med-area").classList.add("hidden");
-  document
-  .querySelectorAll("input[name='dogpattern']")
-  .forEach(r => r.onchange = updateUI);
+  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
-  const course = document.getElementById("course").value;
-  if(course==="ct"){
-    document.getElementById("ct-note").classList.remove("hidden");
-  }else{
-    document.getElementById("ct-note").classList.add("hidden");
-  }
-if (animal.value === "dog") {
-  addPlans(["A","B","C"], plans.separate);
+  if(course.value==="ct") ct-note.classList.remove("hidden");
+  else ct-note.classList.add("hidden");
 
-  const plan = planSel.value;
-
-  document.getElementById("combo-area").classList.add("hidden");
-  document.getElementById("separate-area").classList.add("hidden");
-  document.getElementById("dog-pattern-area").classList.add("hidden");
-
-  // A・C → ノミ＋フィラリア
-  if (plan === "A" || plan === "C") {
-    document.getElementById("separate-area").classList.remove("hidden");
+  if(animal.value==="dog"){
+    [["A","8ヶ月"],["B","12/8混合"],["C","12ヶ月"]].forEach(p=>{
+      let o=document.createElement("option");
+      o.value=p[0]; o.textContent=p[0]+"："+p[1];
+      planSel.appendChild(o);
+    });
   }
 
-  // B → パターン選択
-  if (plan === "B") {
-    document.getElementById("dog-pattern-area").classList.remove("hidden");
-
-    const pattern =
-      document.querySelector("input[name='dogpattern']:checked").value;
-
-    if (pattern === "b1") {
-      document.getElementById("combo-area").classList.remove("hidden");
-      document.getElementById("separate-area").classList.remove("hidden");
-    }
-
-    if (pattern === "b2") {
-      document.getElementById("separate-area").classList.remove("hidden");
-    }
-  }
-}
-
-  // 共通表示
-  document.getElementById("combo-area").classList.add("hidden");
-  document.getElementById("separate-area").classList.add("hidden");
-  document.getElementById("dog-pattern-area").classList.add("hidden");
-
-  // A・C → 総合のみ
-  const plan =planSel.value;
-    document.getElementById("combo-area").classList.remove("hidden");
-  }
-
-  // B → パターン選択
-  if(plan==="B"){
-    document.getElementById("dog-pattern-area").classList.remove("hidden");
-
-    const pattern =
-      document.querySelector("input[name='dogpattern']:checked").value;
-
-    if(pattern==="b1"){
-      // ノミダニ4ヶ月＋総合8ヶ月
-      document.getElementById("combo-area").classList.remove("hidden");
-      document.getElementById("separate-area").classList.remove("hidden");
-    }
-
-    if(pattern==="b2"){
-      // ノミダニ12ヶ月＋フィラリア8ヶ月
-      document.getElementById("separate-area").classList.remove("hidden");
-    }
-  }
-}
- 
   if(animal.value==="cat"){
-    document.getElementById("cat-med-area").classList.remove("hidden");
-    addPlans(["A","B"], plans.cat);
-}else{
-  document.getElementById("cat-med-area").classList.add("hidden");
+    [["A","8ヶ月"],["B","12ヶ月"]].forEach(p=>{
+      let o=document.createElement("option");
+      o.value=p[0]; o.textContent=p[0]+"："+p[1];
+      planSel.appendChild(o);
+    });
+    cat-med-area.classList.remove("hidden");
+  }
+
+  if(animal.value==="dog" && planSel.value==="B"){
+    dog-pattern-area.classList.remove("hidden");
+    const p=document.querySelector("input[name='dogpattern']:checked").value;
+    if(p==="b1"){combo-area.classList.remove("hidden");separate-area.classList.remove("hidden");}
+    if(p==="b2"){separate-area.classList.remove("hidden");}
   }
 }
 
-// ===== 予防期間表示 =====
-function addPlans(keys, planSet){
-  keys.forEach(k=>{
-    const o=document.createElement("option");
-    o.value=k;
-    o.textContent=planSet[k].label;
-    planSel.appendChild(o);
-  });
-}
-
-// ===== 計算 =====
 function calc(){
-
-  if(!animal.value || !course.value || !planSel.value){
-    alert("動物・健診コース・予防期間を選択してください");
-    return;
-  }
-
+  let total=0,detail=[];
   const w=Number(weight.value);
-  let total=0;
-  let detail=[];
-  let discountMsg="";
 
-  // 健診
-  const check = checkup(course.value,w);
-  total += check;
-  detail.push("健診：" + check.toLocaleString() + "円");
-
-  // ===== 犬 =====
-if(animal.value==="dog"){
-
-  const plan = planSel.value;
-
-  /* ========= A・Cプラン（総合のみ） ========= */
-  if(plan==="A" || plan==="C"){
-    const p = getPrice(
-      prices[document.getElementById("combo-med").value],
-      w
-    );
-    const d = plans.combo[plan];
-
-    const sub = p * d.m - p * d.d;
-
-    total += sub;
-    detail.push("予防薬（総合）：" + sub.toLocaleString() + "円");
-    discountMsg = "まとめ買いで " + d.d + "個分お得！";
+  if(animal.value==="dog"){
+    if(planSel.value==="B"){
+      const p=document.querySelector("input[name='dogpattern']:checked").value;
+      if(p==="b1"){
+        total+=getPrice(prices.effipro,w)*3 + getPrice(prices.cred,w)*7;
+        detail.push("犬B①：ノミダニ4＋総合8");
+      }else{
+        total+=getPrice(prices.effipro,w)*11 + getPrice(prices.iver,w)*7;
+        detail.push("犬B②：ノミダニ12＋フィラリア8");
+      }
+    }
   }
 
-  /* ========= Bプラン ========= */
-  if(plan==="B"){
-    const pattern =
-      document.querySelector("input[name='dogpattern']:checked").value;
-
-    const fleaPrice = getPrice(
-      prices[document.getElementById("flea-med").value],
-      w
-    );
-    const comboPrice = getPrice(
-      prices[document.getElementById("combo-med").value],
-      w
-    );
-    const heartPrice = getPrice(prices.iver, w);
-
-    let sub = 0;
-
-    /* --- パターン① ---
-       ノミダニ4ヶ月（-1）
-       総合8ヶ月（-1）
-    */
-    if(pattern==="b1"){
-      const flea = fleaPrice * 4 - fleaPrice * 1;
-      const combo = comboPrice * 8 - comboPrice * 1;
-
-      sub = flea + combo;
-
-      detail.push(
-        "Bプラン①：ノミダニ4ヶ月＋総合8ヶ月：" +
-        sub.toLocaleString() + "円"
-      );
-      discountMsg = "ノミダニ1個分＋総合1個分お得！";
-    }
-
-    /* --- パターン② ---
-       ノミダニ12ヶ月（-1）
-       フィラリア8ヶ月（-1）
-    */
-    if(pattern==="b2"){
-      const flea = fleaPrice * 12 - fleaPrice * 1;
-      const heart = heartPrice * 8 - heartPrice * 1;
-
-      sub = flea + heart;
-
-      detail.push(
-        "Bプラン②：ノミダニ12ヶ月＋フィラリア8ヶ月：" +
-        sub.toLocaleString() + "円"
-      );
-      discountMsg = "ノミダニ1個分＋フィラリア1個分お得！";
-    }
-
-    total += sub;
+  if(animal.value==="cat"){
+    total+=getPrice(prices[cat-med.value],w)* (planSel.value==="A"?7:11);
+    detail.push("猫予防");
   }
-}
-  // ===== 猫 =====
-if(animal.value==="cat"){
-  const med=document.getElementById("cat-med").value;
-  const p=getPrice(prices[med],w);
-  const d=plans.cat[planSel.value];
-  const sub = p*d.m - p*d.d;
 
-  total += sub;
-  detail.push("予防薬：" + sub.toLocaleString() + "円");
-  discountMsg = "まとめ買いで " + d.d + "個分お得！";
-}
-
-  // ===== 表示 =====
-  document.getElementById("result").textContent =
-    "合計（税抜）： " + total.toLocaleString() + " 円";
-
-  document.getElementById("detail").innerHTML =
-    detail.join("<br>") + "<br><b>" + discountMsg + "</b>";
-renderCalendar(animal.value, planSel.value);
+  result.textContent="合計（税抜）："+total.toLocaleString()+"円";
+  detail.innerHTML=detail.join("<br>");
 }
 updateUI();
 </script>
-</div></body>
+</body>
 </html>
