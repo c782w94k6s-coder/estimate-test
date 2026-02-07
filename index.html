@@ -314,6 +314,9 @@ function updateUI(){
   document.getElementById("combo-area").classList.add("hidden");
   document.getElementById("separate-area").classList.add("hidden");
     document.getElementById("cat-med-area").classList.add("hidden");
+  document
+  .querySelectorAll("input[name='dogpattern']")
+  .forEach(r => r.onchange = updateUI);
 
   const course = document.getElementById("course").value;
   if(course==="ct"){
@@ -322,7 +325,12 @@ function updateUI(){
     document.getElementById("ct-note").classList.add("hidden");
   }
 if(animal.value==="dog"){
-  const plan = planSel.value;
+  addPlans(["A","B","C"], {
+    A:{label:"A：ノミダニ8ヶ月／フィラリア8ヶ月"},
+    B:{label:"B：ノミダニ12ヶ月／フィラリア8ヶ月"},
+    C:{label:"C：ノミダニ12ヶ月／フィラリア12ヶ月"}
+  });
+}
 
   // 共通表示
   document.getElementById("combo-area").classList.add("hidden");
