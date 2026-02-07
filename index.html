@@ -10,20 +10,64 @@
   --sub-green:#e6f2ec;
   --border-green:#9ccbb6;
 }
-body{font-family:sans-serif;max-width:680px;margin:20px auto;}
-.wrapper{border:2px solid var(--border-green);border-radius:10px;padding:20px;}
-h2{background:var(--main-green);color:#fff;padding:12px;border-radius:6px;text-align:center;}
-label{font-weight:bold;display:block;margin-top:16px;}
-select,input{width:100%;padding:6px;margin-top:6px;}
+body{
+  font-family:sans-serif;
+  max-width:680px;
+  margin:20px auto;
+}
+.wrapper{
+  border:2px solid var(--border-green);
+  border-radius:10px;
+  padding:20px;
+}
+h2{
+  background:var(--main-green);
+  color:#fff;
+  padding:12px;
+  border-radius:6px;
+  text-align:center;
+}
+label{
+  font-weight:bold;
+  display:block;
+  margin-top:16px;
+}
+select,input{
+  width:100%;
+  padding:6px;
+  margin-top:6px;
+}
 .small{font-size:12px;color:#555;}
 .hidden{display:none;}
-.box{border:1px solid #ccc;padding:10px;margin-top:10px;}
-button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
-
-#result{margin-top:20px;background:var(--sub-green);padding:14px;border-radius:8px;font-size:18px;font-weight:bold;}
-
-.cal{width:100%;border-collapse:collapse;margin-top:10px;}
-.cal th,.cal td{border:1px solid var(--border-green);padding:6px;text-align:center;}
+.box{
+  border:1px solid #ccc;
+  padding:10px;
+  margin-top:10px;
+}
+button{
+  margin-top:20px;
+  width:100%;
+  padding:10px;
+  font-size:16px;
+}
+#result{
+  margin-top:20px;
+  background:var(--sub-green);
+  padding:14px;
+  border-radius:8px;
+  font-size:18px;
+  font-weight:bold;
+}
+.cal{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+.cal th,.cal td{
+  border:1px solid var(--border-green);
+  padding:6px;
+  text-align:center;
+}
 .cal th{background:var(--sub-green);}
 .combo{background:#cfe9dc;font-weight:bold;}
 .flea{background:#fff2cc;font-weight:bold;}
@@ -54,7 +98,7 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
 </select>
 
 <div id="ct-note" class="small hidden" style="color:#b00000;">
-※CTは別途麻酔・処置費用がかかる場合があります
+※CTは別途 読影料・麻酔・処置費用がかかる場合があります
 </div>
 
 <label>予防期間</label>
@@ -102,13 +146,24 @@ button{margin-top:20px;width:100%;padding:10px;font-size:16px;}
 
 <div id="calendar" class="box hidden">
 <table class="cal">
-<tr><th>月</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
-<tr id="cal-row"><th>投与</th><td colspan="12"></td></tr>
+<tr>
+  <th>月</th>
+  <td>1</td><td>2</td><td>3</td><td>4</td>
+  <td>5</td><td>6</td><td>7</td><td>8</td>
+  <td>9</td><td>10</td><td>11</td><td>12</td>
+</tr>
+<tr id="cal-row">
+  <th>投与</th>
+  <td></td><td></td><td></td><td></td>
+  <td></td><td></td><td></td><td></td>
+  <td></td><td></td><td></td><td></td>
+</tr>
 </table>
 </div>
 </div>
 
 <script>
+// ===== 単価 =====
 const prices={
   cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500]],
   nexsp:[[3.6,3000],[7.5,3400],[15,3800]],
@@ -120,73 +175,91 @@ const prices={
 };
 
 function getPrice(list,w){
-  return list.find(i=>w<=i[0])[1];
+  for(const i of list){
+    if(w<=i[0]) return i[1];
+  }
+  return 0;
 }
 
+// ===== UI制御 =====
 const animal=document.getElementById("animal");
 const planSel=document.getElementById("plan");
+const course=document.getElementById("course");
 
 animal.onchange=updateUI;
 course.onchange=updateUI;
-document.querySelectorAll("input[name='dogpattern']").forEach(r=>r.onchange=updateUI);
+document.querySelectorAll("input[name='dogpattern']")
+  .forEach(r=>r.onchange=updateUI);
 
 function updateUI(){
   planSel.innerHTML="";
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
-  if(course.value==="ct") ct-note.classList.remove("hidden");
-  else ct-note.classList.add("hidden");
+  document.getElementById("ct-note")
+    .classList.toggle("hidden", course.value!=="ct");
 
   if(animal.value==="dog"){
-    [["A","8ヶ月"],["B","12/8混合"],["C","12ヶ月"]].forEach(p=>{
-      let o=document.createElement("option");
-      o.value=p[0]; o.textContent=p[0]+"："+p[1];
+    [["A","8ヶ月"],["B","混合"],["C","12ヶ月"]].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
       planSel.appendChild(o);
     });
   }
 
   if(animal.value==="cat"){
     [["A","8ヶ月"],["B","12ヶ月"]].forEach(p=>{
-      let o=document.createElement("option");
-      o.value=p[0]; o.textContent=p[0]+"："+p[1];
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
       planSel.appendChild(o);
     });
-    cat-med-area.classList.remove("hidden");
+    document.getElementById("cat-med-area").classList.remove("hidden");
   }
 
   if(animal.value==="dog" && planSel.value==="B"){
-    dog-pattern-area.classList.remove("hidden");
+    document.getElementById("dog-pattern-area").classList.remove("hidden");
     const p=document.querySelector("input[name='dogpattern']:checked").value;
-    if(p==="b1"){combo-area.classList.remove("hidden");separate-area.classList.remove("hidden");}
-    if(p==="b2"){separate-area.classList.remove("hidden");}
+    if(p==="b1"){
+      document.getElementById("combo-area").classList.remove("hidden");
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
+    if(p==="b2"){
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
   }
 }
 
+// ===== 計算 =====
 function calc(){
-  let total=0,detail=[];
   const w=Number(weight.value);
+  let total=0;
+  let detail=[];
 
-  if(animal.value==="dog"){
-    if(planSel.value==="B"){
-      const p=document.querySelector("input[name='dogpattern']:checked").value;
-      if(p==="b1"){
-        total+=getPrice(prices.effipro,w)*3 + getPrice(prices.cred,w)*7;
-        detail.push("犬B①：ノミダニ4＋総合8");
-      }else{
-        total+=getPrice(prices.effipro,w)*11 + getPrice(prices.iver,w)*7;
-        detail.push("犬B②：ノミダニ12＋フィラリア8");
-      }
+  if(animal.value==="dog" && planSel.value==="B"){
+    const p=document.querySelector("input[name='dogpattern']:checked").value;
+    if(p==="b1"){
+      total+=getPrice(prices.effipro,w)*3;
+      total+=getPrice(prices.cred,w)*7;
+      detail.push("犬B①：ノミダニ4＋総合8（各1個分割引）");
+    }else{
+      total+=getPrice(prices.effipro,w)*11;
+      total+=getPrice(prices.iver,w)*7;
+      detail.push("犬B②：ノミダニ12＋フィラリア8（各1個分割引）");
     }
   }
 
   if(animal.value==="cat"){
-    total+=getPrice(prices[cat-med.value],w)* (planSel.value==="A"?7:11);
-    detail.push("猫予防");
+    const p=getPrice(prices[document.getElementById("cat-med").value],w);
+    total+= p * (planSel.value==="A"?7:11);
+    detail.push("猫：年間まとめ割引適用");
   }
 
-  result.textContent="合計（税抜）："+total.toLocaleString()+"円";
-  detail.innerHTML=detail.join("<br>");
+  document.getElementById("result").textContent=
+    "合計（税抜）："+total.toLocaleString()+"円";
+  document.getElementById("detail").innerHTML=detail.join("<br>");
 }
+
 updateUI();
 </script>
 </body>
