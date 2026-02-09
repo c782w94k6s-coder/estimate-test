@@ -81,10 +81,23 @@ button{
   <option value="light">ライト</option>
   <option value="standard">スタンダード</option>
   <option value="premium">プレミアム</option>
+  <option value="CT">CTコース</option>
 </select>
+  
+<div id="ct-note" class="small hidden" style="color:#b00000;">
+※CTコースは別途 読影料・静脈留置代・点滴代がかかります<br>
+※体重・体格・性格により全身麻酔または鎮静が必要な場合があります
+</div>
 
 <label>予防期間</label>
 <select id="plan"></select>
+
+  <div id="method-area" class="box hidden">
+  <label>予防方法</label>
+  <input type="radio" name="method" value="combo" checked> 1種類で予防（総合）
+  <br>
+  <input type="radio" name="method" value="separate"> 2種類で予防（別々）
+</div>
 
 <!-- 犬Bプラン パターン -->
 <div id="dog-pattern" class="box hidden">
@@ -167,33 +180,66 @@ function checkup(course,w){
     if(w<=40) return 44000;
     return 49500;
   }
-  return 0;
+   return 0;
 }
 
 // ===== UI制御 =====
 animal.onchange=updateUI;
 plan.onchange=updateUI;
+planSel.onchange=updateUI;
 
 function updateUI(){
+  document.getElementById("ct-note")
+  .classList.toggle("hidden", course.value !== "ct");
   plan.innerHTML="";
+  function addPlanOptions(list){
+  list.forEach(p=>{
+    const o=document.createElement("option");
+    o.value=p[0];
+    o.textContent=p[1];
+    planSel.appendChild(o);
+  });
+}
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
-  if(animal.value==="dog"){
-    [["A","8/8"],["B","8/12"],["C","12/12"]].forEach(p=>{
-      const o=document.createElement("option");
-      o.value=p[0];
-      o.textContent=`${p[0]}：フィラリア${p[1].split("/")[0]}ヶ月／ノミダニ${p[1].split("/")[1]}ヶ月`;
-      plan.appendChild(o);
-    });
-  }
+// 犬でA or Cのときだけ表示
+if(animal.value==="dog" && (planSel.value==="A" || planSel.value==="C")){
+  document.getElementById("method-area").classList.remove("hidden");
 
-  if(animal.value==="cat"){
-    [["A","8ヶ月"],["B","12ヶ月"]].forEach(p=>{
-      const o=document.createElement("option");
-      o.value=p[0];
-      o.textContent=`${p[0]}：${p[1]}`;
-      plan.appendChild(o);
-    });
+  const method =
+    document.querySelector("input[name='method']:checked").value;
+
+  if(method==="combo"){
+    combo-area.classList.remove("hidden");
+  }else{
+    separate-area.classList.remove("hidden");
+  }
+}
+  
+  if(animal.value==="dog"){
+  [
+    ["A","フィラリア8ヶ月／ノミダニ8ヶ月"],
+    ["B","フィラリア8ヶ月／ノミダニ12ヶ月"],
+    ["C","フィラリア12ヶ月／ノミダニ12ヶ月"]
+  ].forEach(p=>{
+    const o=document.createElement("option");
+    o.value=p[0];
+    o.textContent=`${p[0]}：${p[1]}`;
+    planSel.appendChild(o);
+  });
+}
+
+if(animal.value==="cat"){
+  [
+    ["A","ノミダニ・フィラリア8ヶ月"],
+    ["B","ノミダニ・フィラリア12ヶ月"]
+  ].forEach(p=>{
+    const o=document.createElement("option");
+    o.value=p[0];
+    o.textContent=`${p[0]}：${p[1]}`;
+    planSel.appendChild(o);
+  });
+}
     document.getElementById("cat-area").classList.remove("hidden");
   }
 
@@ -226,15 +272,16 @@ function calc(){
   let total=checkup(course.value,w);
   let detail=[`健診：${total.toLocaleString()}円`];
 
-  if(animal.value==="dog"){
-    const fleaP=getPrice(prices[flea-med.value],w);
-    const heartP=getPrice(prices.iver,w);
-    const comboP=getPrice(prices[combo-med.value],w);
+if(animal.value==="dog"){
+  const fleaPrice = getPrice(prices[document.getElementById("flea-med").value], w);
+  const heartPrice = getPrice(prices.iver, w);
+  const comboPrice = getPrice(prices[document.getElementById("combo-med").value], w);
 
-    if(plan.value==="A"){
-      total+=fleaP*7 + heartP*7;
-      detail.push("犬A：各8ヶ月（各1個分割引）");
-    }
+  if(planSel.value==="A"){
+    total += heartPrice * 7;
+    total += fleaPrice * 7;
+    detail.push("犬A：フィラリア8ヶ月＋ノミダニ8ヶ月（各1個分割引）");
+  }
     if(plan.value==="B"){
       const pat=document.querySelector("input[name='bpattern']:checked").value;
       if(pat==="p1"){
@@ -245,9 +292,10 @@ function calc(){
         detail.push("犬B②：総合8＋ノミダニ4");
       }
     }
-    if(plan.value==="C"){
-      total+=fleaP*10 + heartP*10;
-      detail.push("犬C：各12ヶ月（各2個分割引）");
+    if(planSel.value==="C"){
+    total += heartPrice * 10;
+    total += fleaPrice * 10;
+    detail.push("犬C：フィラリア12ヶ月＋ノミダニ12ヶ月（各2個分割引）");
     }
   }
 
