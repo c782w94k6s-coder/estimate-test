@@ -1,38 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>かもがわ年間パックお見積り</title>
+
+<style>
+:root{
+  --main-green:#0b6b3a;
+  --sub-green:#e6f2ec;
+  --border-green:#9ccbb6;
+}
+body{
+  font-family:sans-serif;
+  max-width:680px;
+  margin:20px auto;
+}
+.wrapper{
+  border:2px solid var(--border-green);
+  border-radius:10px;
+  padding:20px;
+}
+h2{
+  background:var(--main-green);
+  color:#fff;
+  padding:12px;
+  border-radius:6px;
+  text-align:center;
+}
+label{
+  font-weight:bold;
+  display:block;
+  margin-top:16px;
+}
+select,input{
+  width:100%;
+  padding:6px;
+  margin-top:6px;
+}
+.small{font-size:12px;color:#555;}
+.hidden{display:none;}
+.box{
+  border:1px solid #ccc;
+  padding:10px;
+  margin-top:10px;
+}
+button{
+  margin-top:20px;
+  width:100%;
+  padding:10px;
+  font-size:16px;
+}
+#result{
+  margin-top:20px;
+  background:var(--sub-green);
+  padding:14px;
+  border-radius:8px;
+  font-size:18px;
+  font-weight:bold;
+}
+.cal{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+.cal th,.cal td{
+  border:1px solid var(--border-green);
+  padding:6px;
+  text-align:center;
+}
+.cal th{background:var(--sub-green);}
+.combo{background:#cfe9dc;font-weight:bold;}
+.flea{background:#fff2cc;font-weight:bold;}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+<h2>かもがわ年間パックお見積り</h2>
+
+<label>動物</label>
+<select id="animal">
+  <option value="">選択してください</option>
+  <option value="dog">犬</option>
+  <option value="cat">猫</option>
+</select>
+
+<label>体重（kg）</label>
+<input type="number" id="weight" step="0.1">
+
+<label>健診コース</label>
+<select id="course">
+  <option value="">選択してください</option>
+  <option value="light">ライト</option>
+  <option value="standard">スタンダード</option>
+  <option value="premium">プレミアム</option>
+  <option value="ct">CT</option>
+</select>
+
+<div id="ct-note" class="small hidden" style="color:#b00000;">
+※CTコースは別途 読影料・静脈留置代・点滴代がかかります<br>
+※体重・体格・性格により全身麻酔または鎮静が必要な場合があります
+</div>
+
+<label>予防期間</label>
+<select id="plan"></select>
+
+<!-- 犬Bプラン -->
+<div id="dog-pattern-area" class="box hidden">
+  <label>② 予防薬の種類</label>
+
+  <input type="radio" name="dogpattern" value="b1" checked>
+  パターン①：ノミダニ4ヶ月＋総合8ヶ月<br><br>
+
+  <input type="radio" name="dogpattern" value="b2">
+  パターン②：ノミダニ12ヶ月＋フィラリア8ヶ月
+</div>
+
+<div id="combo-area" class="box hidden">
+  <label>総合予防薬</label>
+  <select id="combo-med">
+    <option value="cred">クレデリオプラス</option>
+    <option value="nexsp">ネクスガードスペクトラ</option>
+  </select>
+</div>
+
+<div id="separate-area" class="box hidden">
+  <label>ノミダニ予防薬</label>
+  <select id="flea-med">
+    <option value="effipro">エフィプロ</option>
+    <option value="nex">ネクスガード</option>
+  </select>
+</div>
+
+<div id="cat-med-area" class="box hidden">
+  <label>猫の予防薬</label>
+  <select id="cat-med">
+    <option value="revplus">レボリューションプラス</option>
+    <option value="catcombo">ネクスガードキャットコンボ</option>
+  </select>
+</div>
+
+<button on‍click="calc()">見積もり計算</button>
+
+<div id="result"></div>
+<div id="detail" class="small"></div>
+
+<div id="calendar" class="box hidden">
+<table class="cal">
+<tr>
+  <th>月</th>
+  <td>1</td><td>2</td><td>3</td><td>4</td>
+  <td>5</td><td>6</td><td>7</td><td>8</td>
+  <td>9</td><td>10</td><td>11</td><td>12</td>
+</tr>
+<tr id="cal-row">
+  <th>投与</th>
+  <td></td><td></td><td></td><td></td>
+  <td></td><td></td><td></td><td></td>
+  <td></td><td></td><td></td><td></td>
+</tr>
+</table>
+</div>
+</div>
+
+<script>
+// ===== 単価 =====
+const prices={
+  cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500]],
+  nexsp:[[3.6,3000],[7.5,3400],[15,3800]],
+  effipro:[[10,1400],[20,1700]],
+  nex:[[4.5,1600],[11,1800]],
+  iver:[[5.6,1000],[11.3,1300]],
+  revplus:[[5,1800]],
+  catcombo:[[7.5,2200]]
+};
+
+function getPrice(list,w){
+  for(const i of list){
+    if(w<=i[0]) return i[1];
+  }
+  return 0;
+}
+
+// ===== UI制御 =====
+const animal=document.getElementById("animal");
+const planSel=document.getElementById("plan");
+const course=document.getElementById("course");
+
+animal.onchange=updateUI;
+course.onchange=updateUI;
+document.querySelectorAll("input[name='dogpattern']")
+  .forEach(r=>r.onchange=updateUI);
+
+function updateUI(){
+  planSel.innerHTML="";
+  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
+
+  document.getElementById("ct-note")
+    .classList.toggle("hidden", course.value!=="ct");
+
+  if(animal.value==="dog"){
+    [["A","8ヶ月"],["B","混合"],["C","12ヶ月"]].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
+      planSel.appendChild(o);
+    });
+  }
+
+  if(animal.value==="cat"){
+    [["A","8ヶ月"],["B","12ヶ月"]].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
+      planSel.appendChild(o);
+    });
+    document.getElementById("cat-med-area").classList.remove("hidden");
+  }
+
+  if(animal.value==="dog" && planSel.value==="B"){
+    document.getElementById("dog-pattern-area").classList.remove("hidden");
+    const p=document.querySelector("input[name='dogpattern']:checked").value;
+    if(p==="b1"){
+      document.getElementById("combo-area").classList.remove("hidden");
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
+    if(p==="b2"){
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
+  }
+}
+
+// ===== カレンダー =====
 function renderCalendar(animal, plan){
   const row = document.getElementById("cal-row").children;
   document.getElementById("calendar").classList.remove("hidden");
 
-  // リセット
   for(let i=1;i<=12;i++){
-    row[i].textContent = "";
-    row[i].className = "";
+    row[i].textContent="";
+    row[i].className="";
   }
 
-  // 犬：B（混合）
   if(animal==="dog" && plan==="B"){
     for(let i=1;i<=4;i++){
-      row[i].textContent = "ノミダニ";
+      row[i].textContent="ノミダニ";
       row[i].classList.add("flea");
     }
     for(let i=5;i<=12;i++){
-      row[i].textContent = "総合";
+      row[i].textContent="総合";
       row[i].classList.add("combo");
     }
   }
 
-  // 犬：A / C
   if(animal==="dog" && plan!=="B"){
     for(let i=1;i<=12;i++){
-      row[i].textContent = "総合";
+      row[i].textContent="総合";
       row[i].classList.add("combo");
     }
   }
 
-  // 猫
   if(animal==="cat"){
     for(let i=1;i<=12;i++){
-      row[i].textContent = "予防薬";
+      row[i].textContent="予防薬";
       row[i].classList.add("combo");
     }
   }
 }
+
+// ===== 計算 =====
+function calc(){
+  const w=Number(weight.value);
+  let total=0;
+  let detail=[];
+
+  if(animal.value==="dog" && planSel.value==="B"){
+    const p=document.querySelector("input[name='dogpattern']:checked").value;
+    if(p==="b1"){
+      total+=getPrice(prices.effipro,w)*3;
+      total+=getPrice(prices.cred,w)*7;
+      detail.push("犬B①：ノミダニ4＋総合8（各1個分割引）");
+    }else{
+      total+=getPrice(prices.effipro,w)*11;
+      total+=getPrice(prices.iver,w)*7;
+      detail.push("犬B②：ノミダニ12＋フィラリア8（各1個分割引）");
+    }
+  }
+
+  if(animal.value==="cat"){
+    const p=getPrice(prices[document.getElementById("cat-med").value],w);
+    total+= p * (planSel.value==="A"?7:11);
+    detail.push("猫：年間まとめ割引適用");
+  }
+
+  document.getElementById("result").textContent=
+    "合計（税抜）："+total.toLocaleString()+"円";
+  document.getElementById("detail").innerHTML=detail.join("<br>");
+
+  renderCalendar(animal.value, planSel.value);
+}
+
+updateUI();
+</script>
+</body>
+</html>
