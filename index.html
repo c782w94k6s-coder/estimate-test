@@ -263,6 +263,10 @@ if(animal.value==="cat"){
 
 // ===== 計算 =====
 function calc(){
+  if(!w || w <= 0){
+  alert("体重を入力してください");
+  return;
+}
   if(!animal.value || !weight.value || !course.value){
     alert("未選択の項目があります");
     return;
