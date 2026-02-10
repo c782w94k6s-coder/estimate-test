@@ -184,13 +184,10 @@ function checkup(course,w){
 }
 
 // ===== UI制御 =====
-course.onchange=updateUI;
 animal.onchange=updateUI;
-planSel.onchange=updateUI;
 
 function updateUI(){
   planSel.innerHTML="";
-  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
   // CT注意文
   document.getElementById("ct-note")
