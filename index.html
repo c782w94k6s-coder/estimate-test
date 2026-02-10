@@ -189,7 +189,6 @@ animal.onchange=updateUI;
 planSel.onchange=updateUI;
 
 function updateUI(){
-  const currenPlan=planSel.value;
   planSel.innerHTML="";
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
