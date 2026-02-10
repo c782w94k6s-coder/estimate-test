@@ -184,7 +184,7 @@ function checkup(course,w){
 }
 
 // ===== UI制御 =====
-course.onchenge=updateUI;
+course.onchange=updateUI;
 animal.onchange=updateUI;
 planSel.onchange=updateUI;
 
@@ -299,14 +299,14 @@ if(animal.value==="dog"){
   }
 }
   if(animal.value==="cat"){
-    const catMed=document.getElementyId("cat-med").value;
-    const p = getPrice(Prices[catMed],w);
-    total+= p * (plan.value==="A"?7:10);
+    const catMed=document.getElementById("cat-med").value;
+    const p = getPrice(prices[catMed],w);
+    total+= p * (planSel.value==="A"?7:10);
     detail.push("猫：年間まとめ割引");
   }
 
   result.textContent=`合計（税抜）：${total.toLocaleString()}円`;
-  document.getElementyId("detail").innerHTML=detail.join("<br>");
+  document.getElementById("detail").innerHTML=detail.join("<br>");
 }
 
 updateUI();
