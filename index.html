@@ -184,11 +184,18 @@ function checkup(course,w){
 }
 
 // ===== UI制御 =====
-animal.onchange=updateUI;
+animal.onchange = updatePlan;
 
-function updateUI(){
-  planSel.innerHTML="";
+function updatePlan(){
+  planSel.innerHTML = "";
 
+  ["A","B","C"].forEach(p=>{
+    const o=document.createElement("option");
+    o.value=p;
+    o.textContent=p;
+    planSel.appendChild(o);
+  });
+}
   // CT注意文
   document.getElementById("ct-note")
     .classList.toggle("hidden", course.value!=="ct");
@@ -251,24 +258,19 @@ function updateUI(){
 }
 // ===== 計算 =====
 function calc(){
-  const w=Number(weight.value);
-  
-  if(!w || w <= 0){
-  alert("体重を入力してください");
-  return;
-}
-  if(!animal.value || !course.value){
-    alert("未選択の項目があります");
-    return;
+  const w = Number(weight.value);
+
+  // ① 最初に total を作る
+  let total = checkup(course.value, w);
+  let detail = [`健診：${total}円`];
+
+  // ② その後に足す
+  if(animal.value==="dog"){
+    total += 10000;
+    detail.push("犬の予防薬");
   }
-   let total=checkup(course.value,w);
-  let detail=[`健診：${total.toLocaleString()}円`];
-
-if(animal.value==="dog"){
-  const fleaPrice = getPrice(prices[document.getElementById("flea-med").value], w);
-  const heartPrice = getPrice(prices.iver, w);
-  const comboPrice = getPrice(prices[document.getElementById("combo-med").value], w);
-
+  result.textContent = total;
+}
   if(planSel.value==="A"){
     total += heartPrice * 7;
     total += fleaPrice * 7;
