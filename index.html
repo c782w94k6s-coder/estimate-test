@@ -140,7 +140,7 @@ button{
   </select>
 </div>
 
-<button on‍click="calc()">見積もり計算</button>
+<button onclick="calc()">見積もり計算</button>
 
 <div id="result"></div>
 <div id="detail" class="small"></div>
@@ -184,6 +184,7 @@ function checkup(course,w){
 }
 
 // ===== UI制御 =====
+course.onchenge=updateUI;
 animal.onchange=updateUI;
 plan.onchange=updateUI;
 planSel.onchange=updateUI;
@@ -255,15 +256,19 @@ function updateUI(){
 }
 // ===== 計算 =====
 function calc(){
-  const w=Numer(weight.value);
+  const w=Number(weight.value);
+  
   if(!w || w <= 0){
   alert("体重を入力してください");
   return;
 }
-  if(!animal.value || !weight.value || !course.value){
+  if(!animal.value || !course.value){
     alert("未選択の項目があります");
     return;
   }
+   let total=checkup(course.value,w);
+  let detail=[`健診：${total.toLocaleString()}円`];
+
 if(animal.value==="dog"){
   const fleaPrice = getPrice(prices[document.getElementById("flea-med").value], w);
   const heartPrice = getPrice(prices.iver, w);
@@ -294,19 +299,15 @@ if(animal.value==="dog"){
     detail.push("犬C：フィラリア12＋ノミダニ12");
   }
 }
-  const w=Number(weight.value);
-  let total=checkup(course.value,w);
-  let detail=[`健診：${total.toLocaleString()}円`];
-
-
   if(animal.value==="cat"){
-    const p=getPrice(prices[cat-med.value],w);
+    const catMed=document.getElementyId("cat-med").value;
+    const p = getPrice(Prices[catMed],w);
     total+= p * (plan.value==="A"?7:10);
     detail.push("猫：年間まとめ割引");
   }
 
   result.textContent=`合計（税抜）：${total.toLocaleString()}円`;
-  detail.innerHTML=detail.join("<br>");
+  document.getElementyId("detail").innerHTML=detail.join("<br>");
 }
 
 updateUI();
