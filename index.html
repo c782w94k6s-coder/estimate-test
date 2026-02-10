@@ -189,7 +189,7 @@ animal.onchange=updateUI;
 planSel.onchange=updateUI;
 
 function updateUI(){
-  // 初期化
+  comst currenPlan=planSel.value;
   planSel.innerHTML="";
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
