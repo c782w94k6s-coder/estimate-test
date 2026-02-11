@@ -235,9 +235,15 @@ course.onchange = updateUI;
   document.querySelector("input[name='bpattern'][value='p1']").checked = true;
 }
   animal.onchange = function(){
-  }
+   resetPrevention();
   updateUI();
 };
+  course.onchange=updateUI;
+
+  planSel.onchange=function(){
+    resetPrevention();
+    updateUI();
+  };
   
   document.querySelectorAll("input[name='method']").forEach(r=>{
   r.onchange = updateUI;
