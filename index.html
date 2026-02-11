@@ -225,6 +225,8 @@ function checkup(course,w){
 }
 
 /* ===== UI制御 ===== */
+document.addEventListener("DOMContentLoaded",function(){
+  
 const animal = document.getElementById("animal");
 const course = document.getElementById("course");
 const planSel = document.getElementById("plan");
@@ -373,6 +375,7 @@ function calc(){
 
 createPlans();
 updateUI();
-</script>
+});
 </body>
+</script>
 </html>
