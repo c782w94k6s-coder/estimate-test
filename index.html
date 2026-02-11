@@ -193,11 +193,9 @@ function checkup(course,w){
 
 /* ===== UI制御 ===== */
 animal.onchange = updateUI;
-planSel.onchange = updateUI;
 course.onchange = updateUI;
 
 function updateUI(){
-  // 初期化
   planSel.innerHTML="";
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
