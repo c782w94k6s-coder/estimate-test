@@ -233,7 +233,6 @@ function checkup(course,w){
 }
   animal.onchange = function(){
    resetPrevention();
-  createPlans();
   updateUI();
 };
   course.onchange=updateUI;
@@ -249,6 +248,32 @@ function checkup(course,w){
   document.querySelectorAll("input[name='bpattern']").forEach(r=>{
   r.onchange = updateUI;
 });
+function createPlans(){
+  planSel.innerHTML = "";
+  if(animal.value==="dog"){
+    [
+      ["A","フィラリア8＋ノミダニ8"],
+      ["B","フィラリア8＋ノミダニ12"],
+      ["C","フィラリア12＋ノミダニ12"]
+    ].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
+      planSel.appendChild(o);
+    });
+  }
+  if(animal.value==="cat"){
+    [
+      ["A","8ヶ月"],
+      ["B","12ヶ月"]
+    ].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
+      planSel.appendChild(o);
+    });
+  }
+}
 function updateUI(){
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
   
@@ -360,7 +385,7 @@ function calc(){
   result.textContent=`合計（税抜）：${total.toLocaleString()}円`;
   detailEl.innerHTML=detail.join("<br>");
 }
-
+createPlans();
 updateUI();
 </script>
 </body>
