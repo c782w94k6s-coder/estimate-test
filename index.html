@@ -147,164 +147,147 @@ button{
 </div>
 
 <script>
-// ===== 単価 =====
+/* ===== DOM ===== */
+const animal   = document.getElementById("animal");
+const planSel  = document.getElementById("planSel");
+const course   = document.getElementById("course");
+const weight   = document.getElementById("weight");
+const result   = document.getElementById("result");
+const detailEl = document.getElementById("detail");
+
+/* ===== 単価 ===== */
 const prices={
-  cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500],[45,4000]],
-  nexsp:[[3.6,3000],[7.5,3400],[15,3800],[30,4400],[60,4700]],
-  effipro:[[10,1400],[20,1700],[40,1900]],
-  nex:[[4.5,1600],[11,1800],[27,2000],[55,2300]],
-  iver:[[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
-  rev:[[2.5,1700],[5,1800],[10,1900]],
-  catcombo:[[2.5,1100],[7.5,1200]]
+  effipro:[[10,1400],[20,1700],[40,1900]],
+  nex:[[4.5,1600],[11,1800],[27,2000],[55,2300]],
+  iver:[[5.6,1000],[11.3,1300],[22.6,1800],[45.3,2200]],
+  cred:[[2.8,2200],[5.5,2300],[11,2800],[22,3500],[45,4000]],
+  nexsp:[[3.6,3000],[7.5,3400],[15,3800],[30,4400],[60,4700]],
+  rev:[[2.5,1700],[5,1800],[10,1900]],
+  catcombo:[[2.5,1100],[7.5,1200]]
 };
 
 function getPrice(list,w){
-  for(const i of list){
-    if(w<=i[0]) return i[1];
-  }
-  return 0;
+  for(const i of list){
+    if(w<=i[0]) return i[1];
+  }
+  return 0;
 }
 
-// ===== 健診 =====
+/* ===== 健診 ===== */
 function checkup(course,w){
-  if(course==="light") return 7700;
-  if(course==="standard"){
-    if(w<=10) return 18700;
-    if(w<=20) return 20900;
-    if(w<=40) return 23100;
-    return 25300;
-  }
-  if(course==="premium"){
-    if(w<=10) return 36300;
-    if(w<=20) return 38500;
-    if(w<=40) return 44000;
-    return 49500;
-  }
-   return 0;
+  if(course==="light") return 7700;
+  if(course==="standard"){
+    if(w<=10) return 18700;
+    if(w<=20) return 20900;
+    if(w<=40) return 23100;
+    return 25300;
+  }
+  if(course==="premium"){
+    if(w<=10) return 36300;
+    if(w<=20) return 38500;
+    if(w<=40) return 44000;
+    return 49500;
+  }
+  return 0;
 }
 
-// ===== UI制御 =====
-animal.onchange = updatePlan;
+/* ===== UI制御 ===== */
+animal.onchange = updateUI;
+planSel.onchange = updateUI;
+course.onchange = updateUI;
 
-function updatePlan(){
-  planSel.innerHTML = "";
+function updateUI(){
+  // 初期化
+  planSel.innerHTML="";
+  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
-  ["A","B","C"].forEach(p=>{
-    const o=document.createElement("option");
-    o.value=p;
-    o.textContent=p;
-    planSel.appendChild(o);
-  });
+  // CT注意
+  document.getElementById("ct-note")
+    .classList.toggle("hidden", course.value!=="ct");
+
+  // 予防期間
+  if(animal.value==="dog"){
+    [
+      ["A","フィラリア8＋ノミダニ8"],
+      ["B","フィラリア8＋ノミダニ12"],
+      ["C","フィラリア12＋ノミダニ12"]
+    ].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
+      planSel.appendChild(o);
+    });
+  }
+
+  if(animal.value==="cat"){
+    [
+      ["A","8ヶ月"],
+      ["B","12ヶ月"]
+    ].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
+      planSel.appendChild(o);
+    });
+    document.getElementById("cat-area").classList.remove("hidden");
+  }
+
+  // 犬の分岐
+  if(animal.value==="dog"){
+    if(planSel.value==="A" || planSel.value==="C"){
+      document.getElementById("method-area").classList.remove("hidden");
+      const m=document.querySelector("input[name='method']:checked").value;
+      document.getElementById(
+        m==="combo"?"combo-area":"separate-area"
+      ).classList.remove("hidden");
+    }
+
+    if(planSel.value==="B"){
+      document.getElementById("dog-pattern").classList.remove("hidden");
+      document.getElementById("separate-area").classList.remove("hidden");
+    }
+  }
 }
-  // CT注意文
-  document.getElementById("ct-note")
-    .classList.toggle("hidden", course.value!=="ct");
 
-  /* ===== 予防期間 ===== */
-  if(animal.value==="dog"){
-    [
-      ["A","フィラリア8ヶ月／ノミダニ8ヶ月"],
-      ["B","フィラリア8ヶ月／ノミダニ12ヶ月"],
-      ["C","フィラリア12ヶ月／ノミダニ12ヶ月"]
-    ].forEach(p=>{
-      const o=document.createElement("option");
-      o.value=p[0];
-      o.textContent=`${p[0]}：${p[1]}`;
-      planSel.appendChild(o);
-    });
-  }
-
-  if(animal.value==="cat"){
-    [
-      ["A","ノミダニ・フィラリア8ヶ月"],
-      ["B","ノミダニ・フィラリア12ヶ月"]
-    ].forEach(p=>{
-      const o=document.createElement("option");
-      o.value=p[0];
-      o.textContent=`${p[0]}：${p[1]}`;
-      planSel.appendChild(o);
-    });
-    document.getElementById("cat-area").classList.remove("hidden");
-  }
-
-  /* ===== 犬の分岐 ===== */
-  if(animal.value==="dog"){
-    if(planSel.value==="A" || planSel.value==="C"){
-      document.getElementById("method-area").classList.remove("hidden");
-
-      const method =
-        document.querySelector("input[name='method']:checked").value;
-
-      if(method==="combo"){
-        document.getElementById("combo-area").classList.remove("hidden");
-      }else{
-        document.getElementById("separate-area").classList.remove("hidden");
-      }
-    }
-
-    if(planSel.value==="B"){
-      document.getElementById("dog-pattern").classList.remove("hidden");
-      const p =
-        document.querySelector("input[name='bpattern']:checked").value;
-
-      if(p==="p1"){
-        document.getElementById("separate-area").classList.remove("hidden");
-      }else{
-        document.getElementById("combo-area").classList.remove("hidden");
-        document.getElementById("separate-area").classList.remove("hidden");
-      }
-    }
-  }
-}
-// ===== 計算 =====
+/* ===== 計算 ===== */
 function calc(){
-  const w = Number(weight.value);
+  const w = Number(weight.value);
+  if(!animal.value || !course.value || !w){
+    alert("未選択があります");
+    return;
+  }
 
-  // ① 最初に total を作る
-  let total = checkup(course.value, w);
-  let detail = [`健診：${total}円`];
+  let total = checkup(course.value,w);
+  let detail = [`健診：${total.toLocaleString()}円`];
 
-  // ② その後に足す
-  if(animal.value==="dog"){
-    total += 10000;
-    detail.push("犬の予防薬");
-  }
-  result.textContent = total;
-}
-  if(planSel.value==="A"){
-    total += heartPrice * 7;
-    total += fleaPrice * 7;
-    detail.push("犬A：フィラリア8＋ノミダニ8（各1個分割引）");
-  }
+  if(animal.value==="dog"){
+    const flea = getPrice(prices[document.getElementById("flea-med").value], w);
+    const heart = getPrice(prices.iver, w);
+    const combo = getPrice(prices[document.getElementById("combo-med").value], w);
 
-  if(planSel.value==="B"){
-    const pat=document.querySelector("input[name='bpattern']:checked").value;
-    if(pat==="p1"){
-      total += heartPrice * 7;
-      total += fleaPrice * 10;
-      detail.push("犬B①：フィラリア8＋ノミダニ12");
-    }else{
-      total += comboPrice * 7;
-      total += fleaPrice * 3;
-      detail.push("犬B②：総合8＋ノミダニ4");
-    }
-  }
+    if(planSel.value==="A"){
+      total += flea*7 + heart*7;
+      detail.push("犬A：フィラリア8＋ノミダニ8");
+    }
+    if(planSel.value==="B"){
+      total += flea*10 + heart*7;
+      detail.push("犬B：フィラリア8＋ノミダニ12");
+    }
+    if(planSel.value==="C"){
+      total += flea*10 + heart*10;
+      detail.push("犬C：フィラリア12＋ノミダニ12");
+    }
+  }
 
-  if(planSel.value==="C"){
-    total += heartPrice * 10;
-    total += fleaPrice * 10;
-    detail.push("犬C：フィラリア12＋ノミダニ12");
-  }
-}
-  if(animal.value==="cat"){
-    const catMed=document.getElementById("cat-med").value;
-    const p = getPrice(prices[catMed],w);
-    total+= p * (planSel.value==="A"?7:10);
-    detail.push("猫：年間まとめ割引");
-  }
+  if(animal.value==="cat"){
+    const catMed=document.getElementById("cat-med").value;
+    const p=getPrice(prices[catMed],w);
+    total+=p*(planSel.value==="A"?7:11);
+    detail.push("猫：年間まとめ");
+  }
 
-  result.textContent=`合計（税抜）：${total.toLocaleString()}円`;
-  document.getElementById("detail").innerHTML=detail.join("<br>");
+  result.textContent=`合計（税抜）：${total.toLocaleString()}円`;
+  detailEl.innerHTML=detail.join("<br>");
 }
 
 updateUI();
