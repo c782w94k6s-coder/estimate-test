@@ -242,17 +242,15 @@ course.onchange = updateUI;
   document.querySelectorAll("input[name='bpattern']").forEach(r=>{
   r.onchange = updateUI;
 });
-
-function updateUI(){
-  const currentPlan=planSel.value;
-  planSel.innerHTML="";
-  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
-
   planSel.onchange = function(){
   resetPrevention();
   updateUI();
 };
-
+function updateUI(){
+  const currentPlan=planSel.value;
+  planSel.innerHTML="";
+  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
+  
   // CT注意
   document.getElementById("ct-note")
     .classList.toggle("hidden", course.value!=="ct");
