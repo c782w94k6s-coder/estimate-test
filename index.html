@@ -233,6 +233,7 @@ function checkup(course,w){
 }
   animal.onchange = function(){
    resetPrevention();
+    createPlans();
   updateUI();
 };
   course.onchange=updateUI;
@@ -241,7 +242,6 @@ function checkup(course,w){
     resetPrevention();
     updateUI();
   };
-  
   document.querySelectorAll("input[name='method']").forEach(r=>{
   r.onchange = updateUI;
 });
@@ -250,15 +250,7 @@ function checkup(course,w){
 });
 function createPlans(){
   planSel.innerHTML = "";
-}
-function updateUI(){
-  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
-  
-  // CT注意
-  document.getElementById("ct-note")
-    .classList.toggle("hidden", course.value!=="ct");
-
-  // 予防期間
+// 予防期間
   if(animal.value==="dog"){
     [
       ["A","フィラリア8＋ノミダニ8"],
@@ -282,6 +274,16 @@ function updateUI(){
       o.textContent=`${p[0]}：${p[1]}`;
       planSel.appendChild(o);
     });
+  }
+}
+function updateUI(){
+  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
+  
+  // CT注意
+  document.getElementById("ct-note")
+    .classList.toggle("hidden", course.value!=="ct");
+
+  
     document.getElementById("cat-area").classList.remove("hidden");
   }
 if(currentPlan){
@@ -362,6 +364,7 @@ function calc(){
   result.textContent=`合計（税抜）：${total.toLocaleString()}円`;
   detailEl.innerHTML=detail.join("<br>");
 
+createPlans();
 updateUI();
 </script>
 </body>
