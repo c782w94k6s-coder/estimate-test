@@ -175,7 +175,7 @@ button{
 <script>
 /* ===== DOM ===== */
 const animal   = document.getElementById("animal");
-const planSel  = document.getElementById("planSel");
+const planSel = document.getElementById("planSel");
 const course   = document.getElementById("course");
 const weight   = document.getElementById("weight");
 const result   = document.getElementById("result");
@@ -224,12 +224,10 @@ function checkup(course,w){
   return 0;
 }
 
-/* ===== UI制御 ===== */
-document.addEventListener("DOMContentLoaded",function(){
-  
+/* ===== UI制御 ===== */  
 const animal = document.getElementById("animal");
 const course = document.getElementById("course");
-const planSel = document.getElementById("plan");
+
   
   function resetPrevention(){
   // 予防方法リセット（1種類に戻す）
@@ -375,7 +373,6 @@ function calc(){
 
 createPlans();
 updateUI();
-});
 </body>
 </script>
 </html>
