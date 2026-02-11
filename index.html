@@ -270,9 +270,20 @@ function calc(){
       detail.push("犬A：フィラリア8＋ノミダニ8");
     }
     if(planSel.value==="B"){
-      total += flea*10 + heart*7;
-      detail.push("犬B：フィラリア8＋ノミダニ12");
-    }
+  const pat = document.querySelector("input[name='bpattern']:checked").value;
+
+  if(pat==="p1"){
+    // パターン①
+    total += heart * 7;   // フィラリア8ヶ月（1個割引）
+    total += flea * 10;   // ノミダニ12ヶ月（2個割引）
+    detail.push("犬B①：フィラリア8＋ノミダニ12");
+  }else{
+    // パターン②
+    total += combo * 7;   // 総合8ヶ月（1個割引）
+    total += flea * 3;    // ノミダニ4ヶ月（1個割引）
+    detail.push("犬B②：総合8＋ノミダニ4");
+  }
+}
     if(planSel.value==="C"){
       total += flea*10 + heart*10;
       detail.push("犬C：フィラリア12＋ノミダニ12");
