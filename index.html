@@ -151,12 +151,14 @@ button{
     <option value="nex">ネクスガード(キューブタイプ)</option>
   </select>
 
+ <div id="heart-area">
   <label style="margin-top:10px;">フィラリア予防薬</label>
   <select id="heart-med">
     <option value="iver">イベルメック(おやつタイプ)</option>
   </select>
 </div>
-
+</div>
+  
 <!-- 猫 -->
 <div id="cat-area" class="box hidden">
   <label>猫の予防薬</label>
@@ -308,9 +310,11 @@ function updateUI(){
 
       if(pat==="p1"){
         document.getElementById("separate-area").classList.remove("hidden");
+        document.getElementById("heart-area").classList.remove("hidden");
       }else{
         document.getElementById("combo-area").classList.remove("hidden");
         document.getElementById("separate-area").classList.remove("hidden");
+        document.getElementById("heart-area").classList.add("hidden");
       }
     }
   }
