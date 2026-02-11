@@ -225,9 +225,6 @@ function checkup(course,w){
 }
 
 /* ===== UI制御 ===== */
-animal.onchange = updateUI;
-course.onchange = updateUI;
-
   function resetPrevention(){
   // 予防方法リセット（1種類に戻す）
   document.querySelector("input[name='method'][value='combo']").checked = true;
