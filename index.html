@@ -277,42 +277,44 @@ function createPlans(){
   }
 }
 function updateUI(){
-  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
-  
-  // CT注意
-  document.getElementById("ct-note")
-    .classList.toggle("hidden", course.value!=="ct");
+  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
-  
-    document.getElementById("cat-area").classList.remove("hidden");
-  }
-if(currentPlan){
-  planSel.value=currentPlan;
-}
-  // 犬の分岐
-  if(animal.value==="dog"){
-    if(planSel.value==="A" || planSel.value==="C"){
-      document.getElementById("method-area").classList.remove("hidden");
-      const m=document.querySelector("input[name='method']:checked").value;
-      document.getElementById(
-        m==="combo"?"combo-area":"separate-area"
-      ).classList.remove("hidden");
-    }
-if(planSel.value==="B"){
-  document.getElementById("dog-pattern").classList.remove("hidden");
+  // CT注意
+  document.getElementById("ct-note")
+    .classList.toggle("hidden", course.value!=="ct");
 
-  const pat = document.querySelector("input[name='bpattern']:checked").value;
+  // 猫
+  if(animal.value==="cat"){
+    document.getElementById("cat-area").classList.remove("hidden");
+  }
 
-  if(pat==="p1"){
-    // パターン① → 別々
-    document.getElementById("separate-area").classList.remove("hidden");
-  }else{
-    // パターン② → 総合＋ノミダニ
-    document.getElementById("combo-area").classList.remove("hidden");
-    document.getElementById("separate-area").classList.remove("hidden");
+  // 犬
+  if(animal.value==="dog"){
+
+    if(planSel.value==="A" || planSel.value==="C"){
+      document.getElementById("method-area").classList.remove("hidden");
+
+      const m=document.querySelector("input[name='method']:checked").value;
+
+      document.getElementById(
+        m==="combo" ? "combo-area" : "separate-area"
+      ).classList.remove("hidden");
+    }
+
+    if(planSel.value==="B"){
+      document.getElementById("dog-pattern").classList.remove("hidden");
+
+      const pat=document.querySelector("input[name='bpattern']:checked").value;
+
+      if(pat==="p1"){
+        document.getElementById("separate-area").classList.remove("hidden");
+      }else{
+        document.getElementById("combo-area").classList.remove("hidden");
+        document.getElementById("separate-area").classList.remove("hidden");
+      }
+    }
   }
 }
-  }
 /* ===== 計算 ===== */
 function calc(){
   const w = Number(weight.value);
