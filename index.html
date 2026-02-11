@@ -198,6 +198,14 @@ course.onchange = updateUI;
 function updateUI(){
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
+  document.querySelectorAll("input[name='method']").forEach(r=>{
+  r.onchange = updateUI;
+});
+
+  document.querySelectorAll("input[name='bpattern']").forEach(r=>{
+  r.onchange = updateUI;
+});
+
   // CT注意
   document.getElementById("ct-note")
     .classList.toggle("hidden", course.value!=="ct");
