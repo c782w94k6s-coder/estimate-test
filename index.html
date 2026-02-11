@@ -327,7 +327,22 @@ function calc(){
     alert("未選択があります");
     return;
   }
+let courseName = "";
+if(course.value==="light") courseName = "ライトコース";
+if(course.value==="standard") courseName = "スタンダードコース";
+if(course.value==="premium") courseName = "プレミアムコース";
+if(course.value==="ct") courseName = "CTコース";
 
+  let planName = "";
+
+if(animal.value==="dog"){
+  planName = "まとめ" + planSel.value;
+}
+
+if(animal.value==="cat"){
+  planName = "猫まとめ" + planSel.value;
+}
+  
   let total = checkup(course.value,w);
   const checkupPrice = total;
 
@@ -377,11 +392,11 @@ function calc(){
     `合計金額（税抜）：${total.toLocaleString()}円`;
 
   detailEl.innerHTML = `
-  【内訳】<br>
-  健診：${checkupPrice.toLocaleString()}円<br>
-  予防薬合計：${preventionTotal.toLocaleString()}円<br><br>
-  <strong style="color:#0b6b3a;">${discountText}</strong>
-  `;
+【内訳】<br>
+${courseName}：${checkup(course.value,w).toLocaleString()}円<br>
+${planName}：${preventionTotal.toLocaleString()}円<br><br>
+<strong style="color:#0b6b3a;">${discountText}</strong>
+`;
 }
 createPlans();
 updateUI();
