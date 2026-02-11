@@ -271,7 +271,9 @@ function updateUI(){
     });
     document.getElementById("cat-area").classList.remove("hidden");
   }
-
+if(currentPlan){
+  planSel.value=currentPlan;
+}
   // 犬の分岐
   if(animal.value==="dog"){
     if(planSel.value==="A" || planSel.value==="C"){
@@ -287,9 +289,6 @@ function updateUI(){
       document.getElementById("separate-area").classList.remove("hidden");
     }
   }
-}
-if(currentPlan){
-  planSel.value=currentPlan;
 }
 /* ===== 計算 ===== */
 function calc(){
