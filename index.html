@@ -234,10 +234,35 @@ course.onchange = updateUI;
   // Bパターンも①に戻す
   document.querySelector("input[name='bpattern'][value='p1']").checked = true;
 }
-planSel.onchange = function(){
-  resetPrevention();
+  animal.onchange = function(){
+  planSel.innerHTML = "";
+
+  if(animal.value==="dog"){
+    [
+      ["A","フィラリア8＋ノミダニ8"],
+      ["B","フィラリア8＋ノミダニ12"],
+      ["C","フィラリア12＋ノミダニ12"]
+    ].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
+      planSel.appendChild(o);
+    });
+  }
+  if(animal.value==="cat"){
+    [
+      ["A","8ヶ月"],
+      ["B","12ヶ月"]
+    ].forEach(p=>{
+      const o=document.createElement("option");
+      o.value=p[0];
+      o.textContent=`${p[0]}：${p[1]}`;
+      planSel.appendChild(o);
+    });
+  }
   updateUI();
 };
+  
   document.querySelectorAll("input[name='method']").forEach(r=>{
   r.onchange = updateUI;
 });
