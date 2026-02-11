@@ -321,49 +321,67 @@ function updateUI(){
 }
 /* ===== 計算 ===== */
 function calc(){
-  const w = Number(weight.value);
-  if(!animal.value || !course.value || !w){
-    alert("未選択があります");
-    return;
-  }
-let preventionTotal = 0;
-let discountText = "";
-// 犬
-if(animal.value==="dog"){
-  if(planSel.value==="A"){
-    preventionTotal = flea*7 + heart*7;
-    discountText = "✨予防薬2個分お得！";
-  }
-  if(planSel.value==="B"){
-    const pat = document.querySelector("input[name='bpattern']:checked").value;
+  const w = Number(weight.value);
 
-    if(pat==="p1"){
-      preventionTotal = heart*7 + flea*10;
-      discountText = "✨予防薬3個分お得！";
-    }else{
-      preventionTotal = combo*7 + flea*3;
+  if(!animal.value || !course.value || !w){
+    alert("未選択があります");
+    return;
+  }
+
+  let total = checkup(course.value,w);
+  const checkupPrice = total;
+
+  let preventionTotal = 0;
+  let discountText = "";
+
+  if(animal.value==="dog"){
+
+    const flea  = getPrice(prices[document.getElementById("flea-med").value], w);
+    const heart = getPrice(prices[document.getElementById("heart-med").value], w);
+    const combo = getPrice(prices[document.getElementById("combo-med").value], w);
+
+    if(planSel.value==="A"){
+      preventionTotal = flea*7 + heart*7;
       discountText = "✨予防薬2個分お得！";
     }
+
+    if(planSel.value==="B"){
+      const pat = document.querySelector("input[name='bpattern']:checked").value;
+
+      if(pat==="p1"){
+        preventionTotal = heart*7 + flea*10;
+        discountText = "✨予防薬3個分お得！";
+      }else{
+        preventionTotal = combo*7 + flea*3;
+        discountText = "✨予防薬2個分お得！";
+      }
+    }
+
+    if(planSel.value==="C"){
+      preventionTotal = flea*10 + heart*10;
+      discountText = "✨予防薬4個分お得！";
+    }
   }
-  if(planSel.value==="C"){
-    preventionTotal = flea*10 + heart*10;
-    discountText = "✨予防薬4個分お得！";
+
+  if(animal.value==="cat"){
+    const catMed = document.getElementById("cat-med").value;
+    const p = getPrice(prices[catMed], w);
+
+    preventionTotal = p*(planSel.value==="A"?7:11);
+    discountText = "✨年間まとめ割適用！";
   }
-}
-// 猫
-if(animal.value==="cat"){
-  preventionTotal = p*(planSel.value==="A"?7:11);
-  discountText = "✨年間まとめ割適用！";
-}
-total += preventionTotal;
-// 表示
-result.textContent = `合計金額（税抜）：${total.toLocaleString()}円`;
-detailEl.innerHTML = `
-【内訳】<br>
-健診：${checkup(course.value,w).toLocaleString()}円<br>
-予防薬合計：${preventionTotal.toLocaleString()}円<br><br>
-<strong style="color:#0b6b3a;">${discountText}</strong>
-`;
+
+  total += preventionTotal;
+
+  result.textContent =
+    `合計金額（税抜）：${total.toLocaleString()}円`;
+
+  detailEl.innerHTML = `
+  【内訳】<br>
+  健診：${checkupPrice.toLocaleString()}円<br>
+  予防薬合計：${preventionTotal.toLocaleString()}円<br><br>
+  <strong style="color:#0b6b3a;">${discountText}</strong>
+  `;
 }
 createPlans();
 updateUI();
