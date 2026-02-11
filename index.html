@@ -237,6 +237,7 @@ course.onchange = updateUI;
 });
 
 function updateUI(){
+  const currentPlan=planSel.value;
   planSel.innerHTML="";
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
@@ -287,7 +288,9 @@ function updateUI(){
     }
   }
 }
-
+if(currentPlan){
+  planSel.value=currentPlan;
+}
 /* ===== 計算 ===== */
 function calc(){
   const w = Number(weight.value);
