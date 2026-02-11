@@ -295,13 +295,21 @@ if(currentPlan){
         m==="combo"?"combo-area":"separate-area"
       ).classList.remove("hidden");
     }
+if(planSel.value==="B"){
+  document.getElementById("dog-pattern").classList.remove("hidden");
 
-    if(planSel.value==="B"){
-      document.getElementById("dog-pattern").classList.remove("hidden");
-      document.getElementById("separate-area").classList.remove("hidden");
-    }
-  }
+  const pat = document.querySelector("input[name='bpattern']:checked").value;
+
+  if(pat==="p1"){
+    // パターン① → 別々
+    document.getElementById("separate-area").classList.remove("hidden");
+  }else{
+    // パターン② → 総合＋ノミダニ
+    document.getElementById("combo-area").classList.remove("hidden");
+    document.getElementById("separate-area").classList.remove("hidden");
+  }
 }
+  }
 /* ===== 計算 ===== */
 function calc(){
   const w = Number(weight.value);
