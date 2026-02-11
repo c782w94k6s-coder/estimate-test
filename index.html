@@ -58,6 +58,20 @@ button{
   font-size:18px;
   font-weight:bold;
 }
+  .pattern-card{
+  display:block;
+  border:1px solid #ccc;
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+.pattern-card:hover{
+  background:#f5f5f5;
+}
+.pattern-card input{
+  margin-right:6px;
+}
 </style>
 </head>
 
@@ -102,10 +116,22 @@ button{
 <!-- 犬Bプラン パターン -->
 <div id="dog-pattern" class="box hidden">
   <label>Bプランの予防方法</label>
-  <input type="radio" name="bpattern" value="p1" checked>
-  パターン①：フィラリア8ヶ月＋ノミダニ12ヶ月<br><br>
-  <input type="radio" name="bpattern" value="p2">
-  パターン②：総合8ヶ月＋ノミダニ4ヶ月
+
+  <label class="pattern-card">
+    <input type="radio" name="bpattern" value="p1" checked>
+    <strong>パターン①（別々で予防）</strong><br>
+    フィラリア8ヶ月<br>
+    ノミダニ12ヶ月<br>
+    <span class="small">→ 王道パターン</span>
+  </label>
+
+  <label class="pattern-card">
+    <input type="radio" name="bpattern" value="p2">
+    <strong>パターン②（総合＋追加）</strong><br>
+    総合8ヶ月<br>
+    ノミダニ4ヶ月追加<br>
+    <span class="small">→ 投薬回数を減らしたい方向け</span>
+  </label>
 </div>
 
 <!-- 犬 総合 -->
