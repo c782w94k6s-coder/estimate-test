@@ -235,30 +235,6 @@ course.onchange = updateUI;
   document.querySelector("input[name='bpattern'][value='p1']").checked = true;
 }
   animal.onchange = function(){
-  planSel.innerHTML = "";
-
-  if(animal.value==="dog"){
-    [
-      ["A","フィラリア8＋ノミダニ8"],
-      ["B","フィラリア8＋ノミダニ12"],
-      ["C","フィラリア12＋ノミダニ12"]
-    ].forEach(p=>{
-      const o=document.createElement("option");
-      o.value=p[0];
-      o.textContent=`${p[0]}：${p[1]}`;
-      planSel.appendChild(o);
-    });
-  }
-  if(animal.value==="cat"){
-    [
-      ["A","8ヶ月"],
-      ["B","12ヶ月"]
-    ].forEach(p=>{
-      const o=document.createElement("option");
-      o.value=p[0];
-      o.textContent=`${p[0]}：${p[1]}`;
-      planSel.appendChild(o);
-    });
   }
   updateUI();
 };
@@ -270,8 +246,6 @@ course.onchange = updateUI;
   r.onchange = updateUI;
 });
 function updateUI(){
-  const currentPlan=planSel.value;
-  planSel.innerHTML="";
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
   
   // CT注意
