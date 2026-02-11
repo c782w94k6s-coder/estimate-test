@@ -234,18 +234,16 @@ course.onchange = updateUI;
   // Bパターンも①に戻す
   document.querySelector("input[name='bpattern'][value='p1']").checked = true;
 }
-
-  document.querySelectorAll("input[name='method']").forEach(r=>{
-  r.onchange = updateUI;
-});
-
-  document.querySelectorAll("input[name='bpattern']").forEach(r=>{
-  r.onchange = updateUI;
-});
-  planSel.onchange = function(){
+planSel.onchange = function(){
   resetPrevention();
   updateUI();
 };
+  document.querySelectorAll("input[name='method']").forEach(r=>{
+  r.onchange = updateUI;
+});
+  document.querySelectorAll("input[name='bpattern']").forEach(r=>{
+  r.onchange = updateUI;
+});
 function updateUI(){
   const currentPlan=planSel.value;
   planSel.innerHTML="";
