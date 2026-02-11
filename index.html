@@ -228,6 +228,13 @@ function checkup(course,w){
 animal.onchange = updateUI;
 course.onchange = updateUI;
 
+  function resetPrevention(){
+  // 予防方法リセット（1種類に戻す）
+  document.querySelector("input[name='method'][value='combo']").checked = true;
+  // Bパターンも①に戻す
+  document.querySelector("input[name='bpattern'][value='p1']").checked = true;
+}
+
   document.querySelectorAll("input[name='method']").forEach(r=>{
   r.onchange = updateUI;
 });
@@ -240,6 +247,11 @@ function updateUI(){
   const currentPlan=planSel.value;
   planSel.innerHTML="";
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
+
+  planSel.onchange = function(){
+  resetPrevention();
+  updateUI();
+};
 
   // CT注意
   document.getElementById("ct-note")
