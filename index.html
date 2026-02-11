@@ -204,6 +204,7 @@ course.onchange = updateUI;
 });
 
 function updateUI(){
+  plansSel.innerHTML="";
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
 
   // CT注意
