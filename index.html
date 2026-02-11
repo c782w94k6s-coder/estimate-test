@@ -188,6 +188,13 @@ function checkup(course,w){
     if(w<=40) return 44000;
     return 49500;
   }
+  if(course==="ct"){
+  if(w <= 10) return 41700;
+
+  // 10kg超えた分を10kg単位で加算
+  const extra = Math.ceil((w - 10) / 10) * 10000;
+  return 41700 + extra;
+}
   return 0;
 }
 
