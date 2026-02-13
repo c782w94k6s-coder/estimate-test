@@ -384,13 +384,18 @@ if(animal.value==="cat"){
   }
 
   if(animal.value==="cat"){
-    const catMed = document.getElementById("cat-med").value;
-    const p = getPrice(prices[catMed], w);
+  const catMed = document.getElementById("cat-med").value;
+  const p = getPrice(prices[catMed], w);
 
-    preventionTotal = p*(planSel.value==="A"?7:11);
-    discountText = "✨年間まとめ割適用！";
+  if(planSel.value==="A"){
+    preventionTotal = p * 7;   // 8ヶ月分 → 1個分割引
+    discountText = "✨予防薬1個分お得！";
   }
-
+  if(planSel.value==="B"){
+    preventionTotal = p * 10;  // 12ヶ月分 → 2個分割引
+    discountText = "✨予防薬2個分お得！";
+  }
+}
   total += preventionTotal;
 
   result.textContent =
