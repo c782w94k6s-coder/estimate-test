@@ -332,37 +332,43 @@ function calc(){
     alert("未選択があります");
     return;
   }
+
   function showConsultMessage(){
-  result.textContent = "🐾 この体重では対応できないお薬があります。スタッフまでご相談ください。";
-  detailEl.innerHTML = "";
-}
-let courseName = "";
-if(course.value==="light") courseName = "ライトコース";
-if(course.value==="standard") courseName = "スタンダードコース";
-if(course.value==="premium") courseName = "プレミアムコース";
-if(course.value==="ct") courseName = "CTコース";
+    result.textContent = "🐾 この体重では対応できないお薬があります。スタッフまでご相談ください。";
+    detailEl.innerHTML = "";
+  }
+
+  let courseName = "";
+  if(course.value==="light") courseName = "ライトコース";
+  if(course.value==="standard") courseName = "スタンダードコース";
+  if(course.value==="premium") courseName = "プレミアムコース";
+  if(course.value==="ct") courseName = "CTコース";
 
   let planName = "";
-
-if(animal.value==="dog"){
-  planName = "まとめ" + planSel.value;
-}
-
-if(animal.value==="cat"){
-  planName = "猫まとめ" + planSel.value;
-}
-  
   let total = checkup(course.value,w);
   const checkupPrice = total;
 
   let preventionTotal = 0;
   let discountText = "";
 
+  /* ===== 犬 ===== */
   if(animal.value==="dog"){
+
+    planName = "まとめ" + planSel.value;
 
     const flea  = getPrice(prices[document.getElementById("flea-med").value], w);
     const heart = getPrice(prices[document.getElementById("heart-med").value], w);
     const combo = getPrice(prices[document.getElementById("combo-med").value], w);
+
+    // nullチェック
+    if(
+      (flea === null && document.getElementById("flea-med")) ||
+      (heart === null && document.getElementById("heart-med")) ||
+      (combo === null && document.getElementById("combo-med"))
+    ){
+      showConsultMessage();
+      return;
+    }
 
     if(planSel.value==="A"){
       preventionTotal = flea*7 + heart*7;
@@ -386,33 +392,31 @@ if(animal.value==="cat"){
       discountText = "✨予防薬4個分お得！";
     }
   }
-const flea = getPrice(prices[document.getElementById("flea-med").value], w);
-const heart = getPrice(prices.iver, w);
-const combo = getPrice(prices[document.getElementById("combo-med").value], w);
 
-if(flea === null || heart === null || combo === null){
-  showConsultMessage();
-  return;
-}
+  /* ===== 猫 ===== */
   if(animal.value==="cat"){
-  const catMed = document.getElementById("cat-med").value;
-  const p = getPrice(prices[catMed], w);
 
-  if(planSel.value==="A"){
-    preventionTotal = p * 7;   // 8ヶ月分 → 1個分割引
-    discountText = "✨予防薬1個分お得！";
-  }
-  if(planSel.value==="B"){
-    preventionTotal = p * 10;  // 12ヶ月分 → 2個分割引
-    discountText = "✨予防薬2個分お得！";
-  }
-}
-  const p = getPrice(prices[catMed], w);
+    planName = "猫まとめ" + planSel.value;
 
-if(p === null){
-  showConsultMessage();
-  return;
-}
+    const catMed = document.getElementById("cat-med").value;
+    const p = getPrice(prices[catMed], w);
+
+    if(p === null){
+      showConsultMessage();
+      return;
+    }
+
+    if(planSel.value==="A"){
+      preventionTotal = p * 7;
+      discountText = "✨予防薬1個分お得！";
+    }
+
+    if(planSel.value==="B"){
+      preventionTotal = p * 10;
+      discountText = "✨予防薬2個分お得！";
+    }
+  }
+
   total += preventionTotal;
 
   result.textContent =
