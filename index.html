@@ -200,8 +200,8 @@ const prices={
 };
 function getPrice(table, weight){
   for(const row of table){
-    if(weight <= row.max){
-      return row.price;
+    if(weight <= row[0]){
+      return row[1];
     }
   }
   return null;  
@@ -270,7 +270,6 @@ function createPlans(){
       planSel.appendChild(o);
     });
   }
-
   if(animal.value==="cat"){
     [
       ["A","8ヶ月"],
