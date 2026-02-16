@@ -198,14 +198,14 @@ const prices={
   rev:[[2.5,1700],[5,1800],[10,1900]],
   catcombo:[[2.5,1100],[7.5,1200]]
 };
-
-function getPrice(list,w){
-  for(const i of list){
-    if(w<=i[0]) return i[1];
-  }
-  return 0;
+function getPrice(table, weight){
+  for(const row of table){
+    if(weight <= row.max){
+      return row.price;
+    }
+  }
+  return null;  
 }
-
 /* ===== 健診 ===== */
 function checkup(course,w){
   if(course==="light") return 7700;
@@ -332,6 +332,10 @@ function calc(){
     alert("未選択があります");
     return;
   }
+  function showConsultMessage(){
+  result.textContent = "🐾 この体重では対応できないお薬があります。スタッフまでご相談ください。";
+  detailEl.innerHTML = "";
+}
 let courseName = "";
 if(course.value==="light") courseName = "ライトコース";
 if(course.value==="standard") courseName = "スタンダードコース";
@@ -382,7 +386,14 @@ if(animal.value==="cat"){
       discountText = "✨予防薬4個分お得！";
     }
   }
+const flea = getPrice(prices[document.getElementById("flea-med").value], w);
+const heart = getPrice(prices.iver, w);
+const combo = getPrice(prices[document.getElementById("combo-med").value], w);
 
+if(flea === null || heart === null || combo === null){
+  showConsultMessage();
+  return;
+}
   if(animal.value==="cat"){
   const catMed = document.getElementById("cat-med").value;
   const p = getPrice(prices[catMed], w);
@@ -395,6 +406,12 @@ if(animal.value==="cat"){
     preventionTotal = p * 10;  // 12ヶ月分 → 2個分割引
     discountText = "✨予防薬2個分お得！";
   }
+}
+  const p = getPrice(prices[catMed], w);
+
+if(p === null){
+  showConsultMessage();
+  return;
 }
   total += preventionTotal;
 
