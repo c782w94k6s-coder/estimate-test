@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>=
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -124,17 +124,17 @@ button{
 
   <label class="pattern-card">
     <input type="radio" name="bpattern" value="p1" checked>
-    <strong>パターン①（フィラリア予防薬+ノミダニ予防薬）</strong><br>
+    <strong>パターン①（フィラリア予防薬+ノミマダニ予防薬）</strong><br>
     フィラリア予防薬8ヶ月<br>
-    ノミダニ予防薬12ヶ月<br>
+    ノミマダニ予防薬12ヶ月<br>
     <span class="small">→ 王道パターン</span>
   </label>
 
   <label class="pattern-card">
     <input type="radio" name="bpattern" value="p2">
-    <strong>パターン②（総合予防薬＋ノミダニ予防薬）</strong><br>
+    <strong>パターン②（総合予防薬＋ノミマダニ予防薬）</strong><br>
     総合予防薬8ヶ月<br>
-    ノミダニ予防薬4ヶ月追加<br>
+    ノミマダニ予防薬4ヶ月追加<br>
     <span class="small">→ 投薬回数を減らしたい方向け</span>
   </label>
 </div>
@@ -150,7 +150,7 @@ button{
 
 <!-- 犬 別々 -->
 <div id="separate-area" class="box hidden">
-  <label>ノミダニ予防薬</label>
+  <label>ノミマダニ予防薬</label>
   <select id="flea-med">
     <option value="effipro">エフィプロデュオ(スポットタイプ)</option>
     <option value="nex">ネクスガード(キューブタイプ)</option>
@@ -260,9 +260,9 @@ function createPlans(){
 // 予防期間
   if(animal.value==="dog"){
     [
-      ["A","フィラリア8ヶ月＋ノミダニ8ヶ月"],
-      ["B","フィラリア8ヶ月＋ノミダニ12ヶ月"],
-      ["C","フィラリア12ヶ月＋ノミダニ12ヶ月"]
+      ["A","フィラリア8ヶ月＋ノミマダニ8ヶ月"],
+      ["B","フィラリア8ヶ月＋ノミマダニ12ヶ月"],
+      ["C","フィラリア12ヶ月＋ノミマダニ12ヶ月"]
     ].forEach(p=>{
       const o=document.createElement("option");
       o.value=p[0];
