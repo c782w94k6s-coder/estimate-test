@@ -374,7 +374,11 @@ function calc(){
 
     if(planSel.value==="A"){
       preventionTotal = flea*7 + heart*7;
-      discountText = "✨予防薬2個分お得！";
+      discountCount = 2;
+      
+      if(pat==="p1"){
+        preventionTotal = combo*7;
+        discountCount = 1;
     }
 
     if(planSel.value==="B"){
@@ -382,18 +386,23 @@ function calc(){
 
       if(pat==="p1"){
         preventionTotal = heart*7 + flea*10;
-        discountText = "✨予防薬3個分お得！";
+        discountCount = 3;
       }else{
         preventionTotal = combo*7 + flea*3;
-        discountText = "✨予防薬2個分お得！";
+        discountCount = 2;
       }
     }
 
     if(planSel.value==="C"){
       preventionTotal = flea*10 + heart*10;
-      discountText = "✨予防薬4個分お得！";
+      discountCount = 4;
+      
+      if(pat==="p1"){
+        preventionTotal = combo*10;
+        discountCount = 2;
     }
-  }
+  discountText = `✨予防薬${discountCount}個分お得！`;
+
 
   /* ===== 猫 ===== */
   if(animal.value==="cat"){
@@ -410,15 +419,15 @@ function calc(){
 
     if(planSel.value==="A"){
       preventionTotal = p * 7;
-      discountText = "✨予防薬1個分お得！";
+      discountCount = 1;
     }
 
     if(planSel.value==="B"){
       preventionTotal = p * 10;
-      discountText = "✨予防薬2個分お得！";
+      discountCount = 2;
     }
   }
-
+discountText = `✨予防薬${discountCount}個分お得！`;
   total += preventionTotal;
 
   result.textContent =
