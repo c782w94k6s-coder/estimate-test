@@ -263,6 +263,7 @@ function checkup(course,w){
   r.onchange = updateUI;
 });
 function createPlans(){
+  planSel.value ="";
   planSel.innerHTML = "";
 // 予防期間
   if(animal.value==="dog"){
@@ -332,9 +333,12 @@ function updateUI(){
 }
 /* ===== 計算 ===== */
 function calc(){
+  result.textContent = "";
+  detailEl.innerHTML = "";
+  
   const w = Number(weight.value);
 
-  if(!animal.value || !course.value || !w){
+  if(!animal.value || !course.value || weight.value ===""){
     alert("未選択があります");
     return;
   }
