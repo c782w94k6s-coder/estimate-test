@@ -372,35 +372,41 @@ function calc(){
       return;
     }
 
-    if(planSel.value==="A"){
-      preventionTotal = flea*7 + heart*7;
-      discountCount = 2;
-      
-      if(pat==="p1"){
-        preventionTotal = combo*7;
-        discountCount = 1;
-    }
+    let discountCount = 0;
 
-    if(planSel.value==="B"){
-      const pat = document.querySelector("input[name='bpattern']:checked").value;
+if(planSel.value==="A"){
+  preventionTotal = flea*7 + heart*7;
+  discountCount = 2;
 
-      if(pat==="p1"){
-        preventionTotal = heart*7 + flea*10;
-        discountCount = 3;
-      }else{
-        preventionTotal = combo*7 + flea*3;
-        discountCount = 2;
-      }
-    }
+  const m = document.querySelector("input[name='method']:checked").value;
+  if(m==="combo"){
+    preventionTotal = combo*7;
+    discountCount = 1;
+  }
+}
 
-    if(planSel.value==="C"){
-      preventionTotal = flea*10 + heart*10;
-      discountCount = 4;
-      
-      if(pat==="p1"){
-        preventionTotal = combo*10;
-        discountCount = 2;
-    }
+if(planSel.value==="B"){
+  const pat = document.querySelector("input[name='bpattern']:checked").value;
+
+  if(pat==="p1"){
+    preventionTotal = heart*7 + flea*10;
+    discountCount = 3;
+  }else{
+    preventionTotal = combo*7 + flea*3;
+    discountCount = 2;
+  }
+}
+
+if(planSel.value==="C"){
+  preventionTotal = flea*10 + heart*10;
+  discountCount = 4;
+
+  const m = document.querySelector("input[name='method']:checked").value;
+  if(m==="combo"){
+    preventionTotal = combo*10;
+    discountCount = 2;
+  }
+}
   discountText = `✨予防薬${discountCount}個分お得！`;
 
 
