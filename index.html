@@ -352,7 +352,7 @@ function calc(){
 
   let preventionTotal = 0;
   let discountText = "";
-
+let discountCount = 0;
   /* ===== 犬 ===== */
   if(animal.value==="dog"){
 
@@ -371,8 +371,6 @@ function calc(){
       showConsultMessage();
       return;
     }
-
-    let discountCount = 0;
 
 if(planSel.value==="A"){
   preventionTotal = flea*7 + heart*7;
