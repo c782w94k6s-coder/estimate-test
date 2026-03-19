@@ -207,7 +207,7 @@ function getPrice(table, weight){
     const max = row[1];
     const price = row[2];
 
-    if(weight > min && weight <= max){
+    if(weight >= min && weight <= max){
       return price;
     }
   }
@@ -215,39 +215,41 @@ function getPrice(table, weight){
 }
 /* ===== 健診 ===== */
 function checkup(course,w,animal){
-  if(course==="light") return 7700;
-  if(course==="standard"){
-    if(w<=10) return 18700;
-    if(w<=20) return 20900;
-    if(w<=40) return 23100;
-    return 25300;
-  }
-  if(course==="premium"){
-    if(w<=10) return 36300;
-    if(w<=20) return 38500;
-    if(w<=40) return 44000;
-    return 49500;
-  }
+
+  if(course==="light") return 7700;
+
+  if(course==="standard"){
+    if(w<=10) return 18700;
+    if(w<=20) return 20900;
+    if(w<=40) return 23100;
+    return 25300;
+  }
+
+  if(course==="premium"){
+    if(w<=10) return 36300;
+    if(w<=20) return 38500;
+    if(w<=40) return 44000;
+    return 49500;
+  }
+
   if(course==="ct"){
 
-  if(animal==="dog"){
-    if(w <= 10) return 41800;
-    const extra = Math.ceil((w - 10) / 10) * 10000;
-    return 41800 + extra;
+    // 🐶 犬
+    if(animal==="dog"){
+      if(w <= 10) return 41800;
+      const extra = Math.ceil((w - 10) / 10) * 10000;
+      return 41800 + extra;
+    }
+
+    // 🐱 猫
+    if(animal==="cat"){
+      if(w <= 5) return 43450;
+      const extra = Math.ceil((w - 5) / 5) * 8000;
+      return 43450 + extra;
+    }
   }
 
-  if(animal==="cat"){
-    if(w <= 5) return 43450;
-    const extra = Math.ceil((w - 5) / 5) * 8000;
-    return 43450 + extra;
-  }
-}
-
-  // 10kg超えた分を10kg単位で加算
-  const extra = Math.ceil((w - 10) / 10) * 10000;
-  return 41700 + extra;
-}
-  return 0;
+  return 0;
 }
 
 /* ===== UI制御 ===== */  
